@@ -1,0 +1,132 @@
+[
+  {
+    "id": "era_industrial",
+    "file": "era_industrial.mp3",
+    "label": "贝多芬《第九交响曲·欢乐颂》",
+    "title": "Ludwig van Beethoven - Symphony No. 9 \"Ode to Joy\"",
+    "performer": "Band of the Rockies, United States Air Force",
+    "license": "Public Domain (U.S. Gov)",
+    "era": "industrial",
+    "size": 3636033
+  },
+  {
+    "id": "era_information",
+    "file": "era_information.mp3",
+    "label": "苏萨《星条旗永不落》",
+    "title": "Stars and Stripes Forever",
+    "performer": "United States Marine Band",
+    "license": "Public Domain",
+    "era": "information",
+    "size": 3702982
+  },
+  {
+    "id": "era_modern",
+    "file": "era_modern.mp3",
+    "label": "霍尔斯特《行星组曲·水星》",
+    "title": "Gustav Holst - The Planets: Mercury, the Winged Messenger",
+    "performer": "United States Air Force Band",
+    "license": "Public Domain (U.S. Gov)",
+    "era": "atomic",
+    "size": 11580203
+  },
+  {
+    "id": "era_modern2",
+    "file": "era_modern2.mp3",
+    "label": "德彪西《月光》",
+    "title": "Claude Debussy - Clair de Lune",
+    "performer": "Wright Brass, United States Air Force",
+    "license": "Public Domain (U.S. Gov)",
+    "era": "electric",
+    "size": 3945327
+  },
+  {
+    "id": "era_renaissance",
+    "file": "era_renaissance.mp3",
+    "label": "莫扎特《如此微风》(合唱)",
+    "title": "W.A. Mozart - Soave sia il vento (Così fan tutte)",
+    "performer": "The United States Air Force Singing Sergeants",
+    "license": "Public Domain (U.S. Gov)",
+    "era": "renaissance",
+    "size": 6316232
+  },
+  {
+    "id": "mu_bach",
+    "file": "mu_bach.mp3",
+    "label": "巴赫《G弦上的咏叹调》",
+    "title": "J.S. Bach - Air on the G String (Orchestral Suite No. 3)",
+    "performer": "Air Force Strings, United States Air Force Band",
+    "license": "Public Domain (U.S. Gov)",
+    "era": "classical",
+    "size": 7539726
+  },
+  {
+    "id": "mu_chant",
+    "file": "mu_chant.mp3",
+    "label": "格里高利圣咏",
+    "title": "Gregorian Chant",
+    "performer": "Anonymous",
+    "license": "Public Domain",
+    "era": "medieval",
+    "size": 6212238
+  },
+  {
+    "id": "mu_dvorak",
+    "file": "mu_dvorak.mp3",
+    "label": "德沃夏克《自新大陆·念故乡》",
+    "title": "A. Dvořák - Symphony No. 9 \"From the New World\": Largo (Goin' Home)",
+    "performer": "United States Air Force Band Concert Band",
+    "license": "Public Domain (U.S. Gov)",
+    "era": "industrial",
+    "size": 7919025
+  },
+  {
+    "id": "mu_erquan",
+    "file": "mu_erquan.mp3",
+    "label": "二胡曲《Erhu on 3》",
+    "title": "Erhu on 3",
+    "performer": "Antti Luode",
+    "license": "CC BY 3.0",
+    "era": "china",
+    "size": 4523556
+  },
+  {
+    "id": "mu_march",
+    "file": "mu_march.mp3",
+    "label": "苏萨《皇家小号进行曲》",
+    "title": "John Philip Sousa - March of the Royal Trumpets",
+    "performer": "United States Marine Band (2017)",
+    "license": "Public Domain (U.S. Gov)",
+    "era": "information",
+    "size": 9858326
+  },
+  {
+    "id": "mu_satie",
+    "file": "mu_satie.mp3",
+    "label": "萨蒂《裸体歌舞第一号》",
+    "title": "Erik Satie - Gymnopédie No. 1",
+    "performer": "Anonymous",
+    "license": "Public Domain",
+    "era": "electric",
+    "size": 7487656
+  },
+  {
+    "id": "mu_strauss",
+    "file": "mu_strauss.mp3",
+    "label": "施特劳斯《蓝色多瑙河》",
+    "title": "Johann Strauss II - An der schönen blauen Donau",
+    "performer": "United States Marine Band",
+    "license": "Public Domain (U.S. Gov)",
+    "era": "atomic",
+    "size": 13183232
+  },
+  {
+    "id": "mu_vivaldi",
+    "file": "mu_vivaldi.mp3",
+    "label": "维瓦尔第《四季·秋》",
+    "title": "A. Vivaldi - The Four Seasons Op.8: Autumn (RV 293)",
+    "performer": "The Modena Chamber Orchestra",
+    "license": "PDM-owner",
+    "era": "renaissance",
+    "size": 11733266
+  }
+]

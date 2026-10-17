@@ -1,0 +1,21 @@
+appId: com.classroom.techstory
+productName: 人类科技文明演进
+directories:
+  output: release
+files:
+  - dist/**
+  - electron/**
+  - package.json
+asar: true
+# 音频流媒体走真实文件更稳（便携版解包后也是本地目录）
+asarUnpack:
+  - dist/assets/music/**
+win:
+  target:
+    - target: portable
+      arch:
+        - x64
+portable:
+  # 固定解包目录：二次启动不用重新解包 100MB 资源
+  unpackDirName: tech-story-classroom
+npmRebuild: false

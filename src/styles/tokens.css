@@ -1,0 +1,106 @@
+/* ══════════════════════════════════════════════════════════
+   Tech Story · 设计令牌
+   深空蓝底 + 电光青主色 + 琥珀强调，全息 HUD 风格
+   ══════════════════════════════════════════════════════════ */
+:root {
+  /* ── 底色：分层深空 ── */
+  --c-void:      #03060f;
+  --c-deep:      #050a1e;
+  --c-panel:     #0a1430;
+  --c-panel-2:   #0d1b3d;
+  --c-raised:    #12224a;
+
+  /* ── 主色：电光青 ── */
+  --c-cyan:      #00d4ff;
+  --c-cyan-dim:  #0891b2;
+  --c-cyan-glow: rgba(0, 212, 255, 0.55);
+  --c-cyan-soft: rgba(0, 212, 255, 0.12);
+
+  /* ── 强调：琥珀 ── */
+  --c-amber:     #ffb347;
+  --c-amber-dim: #c77f1e;
+  --c-amber-glow: rgba(255, 179, 71, 0.5);
+  --c-amber-soft: rgba(255, 179, 71, 0.13);
+
+  /* ── 辅助色 ── */
+  --c-violet:    #a78bfa;
+  --c-emerald:   #34d399;
+  --c-rose:      #fb7185;
+  --c-gold:      #ffd166;
+
+  /* ── 文字 ── */
+  --t-hi:        #eaf4ff;
+  --t-mid:       #a9c1de;
+  --t-lo:        #64809f;
+  --t-faint:     #3d5875;
+
+  /* ── 描边 ── */
+  --line:        rgba(120, 190, 255, 0.16);
+  --line-strong: rgba(140, 210, 255, 0.34);
+  --line-hot:    rgba(0, 212, 255, 0.6);
+
+  /* ── 玻璃 ── */
+  --glass-bg:     linear-gradient(160deg, rgba(16, 32, 68, 0.78) 0%, rgba(7, 14, 34, 0.86) 100%);
+  --glass-bg-hi:  linear-gradient(160deg, rgba(24, 46, 92, 0.86) 0%, rgba(9, 18, 42, 0.92) 100%);
+  --glass-shadow: 0 18px 50px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(180, 225, 255, 0.10);
+
+  /* ── 发光 ── */
+  --glow-cyan:   0 0 18px rgba(0, 212, 255, 0.35), 0 0 46px rgba(0, 212, 255, 0.14);
+  --glow-amber:  0 0 18px rgba(255, 179, 71, 0.35), 0 0 46px rgba(255, 179, 71, 0.14);
+  --glow-text:   0 0 14px rgba(0, 212, 255, 0.55);
+
+  /* ── 圆角 ── */
+  --r-xs: 4px;
+  --r-sm: 7px;
+  --r-md: 11px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+
+  /* ── 间距 ── */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 22px; --s-6: 30px; --s-7: 42px; --s-8: 60px;
+
+  /* ── 字体 ── */
+  --f-sans: 'Inter', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+  --f-display: 'Orbitron', 'Rajdhani', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --f-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Courier New', monospace;
+
+  /* ── 动效 ── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io:  cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur: 260ms;
+  --dur-slow: 520ms;
+
+  /* ── 层级 ── */
+  --z-globe: 1;
+  --z-hud: 10;
+  --z-panel: 20;
+  --z-modal: 100;
+  --z-toast: 200;
+
+  /* ── 分类色（科技树/图例） ── */
+  --cat-energy:        #ff9d5c;
+  --cat-material:      #c9a227;
+  --cat-transport:     #5cc8ff;
+  --cat-communication: #7ee787;
+  --cat-computation:   #b48cff;
+  --cat-life:          #ff7eb6;
+  --cat-space:         #6fd3e8;
+  --cat-society:       #d4c09a;
+  --cat-science:       #8fd0ff;
+  --cat-conflict:      #ff5f56;
+}
+
+/* 分类色工具类 */
+.cat-energy        { --cat: var(--cat-energy); }
+.cat-material      { --cat: var(--cat-material); }
+.cat-transport     { --cat: var(--cat-transport); }
+.cat-communication { --cat: var(--cat-communication); }
+.cat-computation   { --cat: var(--cat-computation); }
+.cat-life          { --cat: var(--cat-life); }
+.cat-space         { --cat: var(--cat-space); }
+.cat-society       { --cat: var(--cat-society); }
+.cat-science       { --cat: var(--cat-science); }
+.cat-conflict      { --cat: var(--cat-conflict); }

@@ -1,0 +1,269 @@
+/* ══════════════════════════════════════════════════════════
+   Tech Story · 原理演示组件通用样式
+   13 个 demo 共用：外壳 / 舞台 / 控件 / 读数 / 要点
+   ══════════════════════════════════════════════════════════ */
+
+.demo-frame {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--glass-bg);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+  /* 每个 demo 可覆盖 --dc 作为自己的主题色 */
+  --dc: var(--c-cyan);
+}
+.demo-frame::before {
+  content: '';
+  position: absolute; inset: 0 0 auto 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--dc), transparent);
+  opacity: 0.85;
+}
+
+/* ── 头部 ── */
+.demo-frame__head {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--dc) 9%, transparent), transparent);
+}
+.demo-frame__icon {
+  flex: none; width: 30px; height: 30px; border-radius: 9px;
+  display: grid; place-items: center; font-size: 15px;
+  border: 1px solid color-mix(in srgb, var(--dc) 45%, transparent);
+  background: color-mix(in srgb, var(--dc) 14%, transparent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--dc) 28%, transparent);
+}
+.demo-frame__titles { min-width: 0; flex: 1; }
+.demo-frame__title {
+  font-family: var(--f-display); font-size: 13.5px; font-weight: 700;
+  letter-spacing: 0.08em; color: var(--t-hi);
+  display: flex; align-items: center; gap: 8px;
+}
+.demo-frame__hint { font-size: 11.5px; color: var(--t-lo); margin-top: 3px; line-height: 1.6; }
+.demo-frame__tag {
+  font-family: var(--f-mono); font-size: 9.5px; letter-spacing: 0.1em;
+  padding: 2px 6px; border-radius: 4px; text-transform: uppercase;
+  color: var(--dc);
+  border: 1px solid color-mix(in srgb, var(--dc) 40%, transparent);
+  background: color-mix(in srgb, var(--dc) 10%, transparent);
+}
+
+/* ── 舞台 ── */
+.demo-stage {
+  position: relative;
+  padding: 8px 10px 4px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--dc) 7%, transparent), transparent 62%),
+    repeating-linear-gradient(0deg, rgba(120, 190, 255, 0.045) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(120, 190, 255, 0.045) 0 1px, transparent 1px 26px);
+}
+.demo-stage svg { display: block; width: 100%; height: auto; }
+.demo-stage__note {
+  position: absolute; left: 14px; bottom: 8px;
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.04em;
+  color: var(--t-lo); pointer-events: none;
+}
+
+/* SVG 内部通用 */
+.demo-stage text { font-family: var(--f-sans); }
+.demo-stage .lbl { font-size: 10px; fill: var(--t-lo); letter-spacing: 0.04em; }
+.demo-stage .lbl-hi { font-size: 11px; fill: var(--t-hi); font-weight: 600; }
+.demo-stage .val { font-family: var(--f-mono); font-size: 11px; fill: var(--dc); }
+
+/* ── 控制区 ── */
+.demo-ctrl {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+  padding: 11px 14px;
+  border-top: 1px solid var(--line);
+  background: rgba(4, 9, 24, 0.5);
+}
+.demo-ctrl__group { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.demo-ctrl__label {
+  font-size: 11.5px; color: var(--t-mid); white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
+}
+.demo-ctrl__label b { font-family: var(--f-mono); font-weight: 600; color: var(--dc); font-size: 11px; }
+.demo-ctrl__spacer { flex: 1 1 auto; }
+
+/* 滑块：细杆 + 发光把手 */
+.demo-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 118px; height: 16px; background: transparent; cursor: pointer;
+}
+.demo-slider::-webkit-slider-runnable-track {
+  height: 4px; border-radius: 2px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--dc) 65%, transparent) var(--fill, 50%), rgba(120, 190, 255, 0.16) var(--fill, 50%));
+}
+.demo-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 13px; height: 13px; margin-top: -4.5px; border-radius: 50%;
+  background: #eaf8ff; border: 2px solid var(--dc);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--dc) 70%, transparent);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.demo-slider:active::-webkit-slider-thumb { transform: scale(1.22); }
+.demo-slider::-moz-range-track { height: 4px; border-radius: 2px; background: rgba(120, 190, 255, 0.16); }
+.demo-slider::-moz-range-progress { height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--dc) 65%, transparent); }
+.demo-slider::-moz-range-thumb {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: #eaf8ff; border: 2px solid var(--dc);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--dc) 70%, transparent);
+}
+
+/* 按钮 */
+.demo-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 13px; border-radius: 8px;
+  font-size: 12px; font-weight: 650; letter-spacing: 0.02em;
+  color: var(--t-hi); cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--dc) 40%, transparent);
+  background: color-mix(in srgb, var(--dc) 12%, transparent);
+  transition: all var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.demo-btn:hover:not(:disabled) {
+  border-color: var(--dc);
+  background: color-mix(in srgb, var(--dc) 22%, transparent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--dc) 32%, transparent);
+  transform: translateY(-1px);
+}
+.demo-btn:active:not(:disabled) { transform: translateY(0) scale(0.97); }
+.demo-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.demo-btn--on {
+  border-color: var(--dc);
+  background: color-mix(in srgb, var(--dc) 30%, transparent);
+  box-shadow: inset 0 0 12px color-mix(in srgb, var(--dc) 30%, transparent);
+}
+.demo-btn--ghost {
+  border-color: var(--line);
+  background: rgba(120, 190, 255, 0.05);
+  color: var(--t-mid);
+}
+.demo-btn--big { padding: 9px 20px; font-size: 13px; border-radius: 10px; }
+
+/* 开关（拨杆式） */
+.demo-toggle {
+  position: relative; width: 40px; height: 21px; border-radius: 11px;
+  border: 1px solid var(--line-strong); background: rgba(4, 10, 26, 0.85);
+  cursor: pointer; flex: none; transition: all var(--dur) var(--ease-out);
+}
+.demo-toggle::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--t-lo); transition: all var(--dur) var(--ease-spring);
+}
+.demo-toggle.is-on { border-color: var(--dc); background: color-mix(in srgb, var(--dc) 20%, transparent); }
+.demo-toggle.is-on::after {
+  left: 21px; background: #eaf8ff;
+  box-shadow: 0 0 10px var(--dc);
+}
+
+/* 读数仪表 */
+.demo-meter {
+  display: flex; align-items: center; gap: 7px;
+  padding: 4px 10px; border-radius: 7px;
+  border: 1px solid var(--line);
+  background: rgba(3, 8, 20, 0.7);
+}
+.demo-meter__k { font-size: 10px; color: var(--t-lo); letter-spacing: 0.06em; }
+.demo-meter__v { font-family: var(--f-mono); font-size: 13px; font-weight: 700; color: var(--dc); min-width: 46px; text-align: right; }
+.demo-meter__bar { width: 52px; height: 4px; border-radius: 2px; background: rgba(120, 190, 255, 0.14); overflow: hidden; }
+.demo-meter__fill {
+  height: 100%; border-radius: 2px; background: var(--dc);
+  box-shadow: 0 0 8px var(--dc);
+  transition: width var(--dur) var(--ease-out);
+}
+
+/* 状态条（演示反馈语） */
+.demo-status {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  font-size: 12px; line-height: 1.6; color: var(--t-mid);
+  border-top: 1px solid var(--line);
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--dc) 7%, transparent));
+}
+.demo-status__dot {
+  width: 6px; height: 6px; border-radius: 50%; flex: none;
+  background: var(--dc); box-shadow: 0 0 8px var(--dc);
+  animation: demoPulse 1.6s var(--ease-io) infinite;
+}
+.demo-status--warn { --dc: var(--c-rose); }
+.demo-status--good { --dc: var(--c-emerald); }
+@keyframes demoPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.72); } }
+
+/* ── 原理要点 ── */
+.demo-points {
+  display: grid; gap: 7px;
+  padding: 11px 14px 13px;
+  border-top: 1px solid var(--line);
+  background: rgba(4, 9, 24, 0.42);
+}
+.demo-points__h {
+  font-family: var(--f-mono); font-size: 9.5px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--t-faint);
+}
+.demo-points ul { list-style: none; display: grid; gap: 6px; }
+.demo-points li {
+  position: relative; padding-left: 18px;
+  font-size: 12px; line-height: 1.7; color: var(--t-mid);
+}
+.demo-points li::before {
+  content: ''; position: absolute; left: 4px; top: 8px;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--dc); box-shadow: 0 0 7px var(--dc);
+}
+
+/* ── 分步演示（造纸 / 光刻 / 印刷） ── */
+.demo-steps { display: flex; gap: 5px; padding: 10px 14px 0; flex-wrap: wrap; }
+.demo-step {
+  flex: 1 1 0; min-width: 62px;
+  padding: 7px 8px; border-radius: 8px; text-align: left; cursor: pointer;
+  border: 1px solid var(--line); background: rgba(120, 190, 255, 0.04);
+  transition: all var(--dur) var(--ease-out);
+}
+.demo-step__i { font-family: var(--f-mono); font-size: 9px; color: var(--t-faint); letter-spacing: 0.1em; }
+.demo-step__n { font-size: 11.5px; font-weight: 650; color: var(--t-mid); margin-top: 2px; }
+.demo-step.is-done { border-color: color-mix(in srgb, var(--dc) 32%, transparent); }
+.demo-step.is-done .demo-step__n { color: var(--t-mid); }
+.demo-step.is-done .demo-step__i { color: var(--dc); }
+.demo-step.is-active {
+  border-color: var(--dc);
+  background: color-mix(in srgb, var(--dc) 15%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--dc) 24%, transparent);
+  transform: translateY(-2px);
+}
+.demo-step.is-active .demo-step__n { color: var(--t-hi); }
+.demo-step.is-active .demo-step__i { color: var(--dc); }
+
+/* ── 真值表 / 数据表 ── */
+.demo-table { width: 100%; border-collapse: collapse; font-family: var(--f-mono); font-size: 11.5px; }
+.demo-table th, .demo-table td {
+  padding: 5px 8px; text-align: center;
+  border-bottom: 1px solid rgba(120, 190, 255, 0.1);
+}
+.demo-table th { color: var(--t-lo); font-weight: 600; letter-spacing: 0.08em; font-size: 10px; }
+.demo-table td { color: var(--t-mid); }
+.demo-table tr.is-hit td { color: var(--dc); background: color-mix(in srgb, var(--dc) 12%, transparent); font-weight: 700; }
+.demo-table .t1 { color: var(--c-emerald); }
+.demo-table .t0 { color: var(--t-faint); }
+
+/* SVG 动画工具 */
+@keyframes demoSpin { to { transform: rotate(360deg); } }
+@keyframes demoFlow { to { stroke-dashoffset: -40; } }
+@keyframes demoFlicker { 0%, 100% { opacity: 1; } 42% { opacity: 0.72; } 68% { opacity: 0.9; } }
+@keyframes demoShake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-1.4px, 1px); }
+  40% { transform: translate(1.2px, -1.2px); }
+  60% { transform: translate(-1px, -0.8px); }
+  80% { transform: translate(1px, 0.9px); }
+}
+.demo-flow { stroke-dasharray: 6 8; animation: demoFlow 1.1s linear infinite; }
+.demo-flicker { animation: demoFlicker 0.42s steps(2, end) infinite; }
+.demo-shake { animation: demoShake 0.28s linear infinite; }
+
+@media (max-width: 720px) {
+  .demo-slider { width: 92px; }
+  .demo-ctrl { gap: 8px 12px; }
+}

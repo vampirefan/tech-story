@@ -1,0 +1,158 @@
+/* ══════════════════════════════════════════════════════════
+   场景通用布局：每个 Scene 的根元素铺满 .app__main
+   ══════════════════════════════════════════════════════════ */
+
+.scene-root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ── 可滚动的文档型场景（中国专题 / 资源库 / 维护页） ── */
+.doc-scene {
+  position: absolute; inset: 0;
+  overflow-y: auto; overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+.doc-wrap {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: var(--s-6) var(--s-6) var(--s-8);
+  display: flex; flex-direction: column; gap: var(--s-6);
+}
+
+/* ── 场景大标题 ── */
+.scene-head { display: flex; flex-direction: column; gap: 6px; }
+.scene-head__eyebrow {
+  font-family: var(--f-display);
+  font-size: 11px; letter-spacing: 0.34em; text-transform: uppercase;
+  color: var(--c-cyan); text-shadow: 0 0 12px var(--c-cyan-glow);
+}
+.scene-head__title {
+  font-size: clamp(24px, 3.4vw, 42px);
+  font-weight: 800; letter-spacing: 0.02em;
+  background: linear-gradient(120deg, #eaf4ff 20%, var(--c-cyan) 62%, var(--c-amber) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.scene-head__sub { font-size: 13.5px; color: var(--t-mid); max-width: 74ch; line-height: 1.75; }
+
+/* ── 章节 ── */
+.sec { display: flex; flex-direction: column; gap: var(--s-4); }
+.sec__h {
+  display: flex; align-items: baseline; gap: 12px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--line);
+}
+.sec__h h3 { font-size: 17px; color: var(--t-hi); letter-spacing: 0.03em; }
+.sec__h .label-xs { margin-left: auto; }
+.sec__h::before {
+  content: ''; width: 3px; height: 17px; border-radius: 2px;
+  background: linear-gradient(180deg, var(--c-cyan), transparent);
+  box-shadow: 0 0 10px var(--c-cyan-glow);
+}
+
+/* ── 网格 ── */
+.grid { display: grid; gap: var(--s-4); }
+.grid--auto   { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.grid--cards  { grid-template-columns: repeat(auto-fill, minmax(265px, 1fr)); }
+.grid--wide   { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+.grid--2      { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+
+/* ── 药丸行 ── */
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+
+/* ── 加载遮罩 ── */
+.loading {
+  position: absolute; inset: 0; z-index: 60;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-4);
+  background: radial-gradient(ellipse 80% 60% at 50% 45%, rgba(0, 60, 120, 0.28), transparent 70%), rgba(3, 6, 15, 0.94);
+}
+.loading__text {
+  font-family: var(--f-display); font-size: 12px; letter-spacing: 0.28em;
+  text-transform: uppercase; color: var(--c-cyan);
+}
+.loading__bar { width: min(340px, 62vw); }
+
+/* ── 空态 ── */
+.blank {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  color: var(--t-lo); font-size: 13px;
+}
+
+/* ── 侧栏（详情页等） ── */
+.split {
+  position: absolute; inset: 0;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 460px);
+  gap: 0;
+}
+.split__main { position: relative; min-width: 0; }
+.split__side {
+  position: relative; min-width: 0;
+  overflow-y: auto;
+  border-left: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(6, 12, 30, 0.9), rgba(4, 9, 22, 0.96));
+}
+@media (max-width: 1024px) {
+  .split { grid-template-columns: minmax(0, 1fr); grid-template-rows: 42vh minmax(0, 1fr); }
+  .split__side { border-left: 0; border-top: 1px solid var(--line); }
+}
+
+/* ── 正文段落（长文可读性） ── */
+.prose { font-size: 14px; line-height: 1.95; color: var(--t-mid); }
+.prose p + p { margin-top: 0.85em; text-indent: 2em; }
+.prose b, .prose strong { color: var(--t-hi); font-weight: 700; }
+.prose em { color: var(--c-amber); font-style: normal; }
+.selectable { user-select: text; }
+
+/* ── 引文 ── */
+.quote {
+  position: relative;
+  padding: var(--s-4) var(--s-5);
+  border-left: 2px solid var(--c-amber);
+  background: linear-gradient(90deg, rgba(255, 179, 71, 0.09), transparent 70%);
+  font-size: 15px; line-height: 1.85; color: var(--t-hi);
+}
+.quote__by { display: block; margin-top: 7px; font-size: 11.5px; color: var(--t-lo); letter-spacing: 0.06em; }
+
+/* ── 数字强调 ── */
+.bignum {
+  font-family: var(--f-mono);
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 800; line-height: 1;
+  color: var(--c-cyan); text-shadow: 0 0 20px var(--c-cyan-glow);
+}
+.bignum--amber { color: var(--c-amber); text-shadow: 0 0 20px var(--c-amber-glow); }
+.bignum__unit { font-size: 0.42em; color: var(--t-mid); margin-left: 5px; letter-spacing: 0.06em; white-space: nowrap; }
+
+/* ── 时间带刻度 ── */
+.rail { position: relative; display: flex; flex-direction: column; gap: 0; }
+.rail::before {
+  content: ''; position: absolute; left: 11px; top: 6px; bottom: 6px; width: 1px;
+  background: linear-gradient(180deg, transparent, var(--line-strong) 8%, var(--line-strong) 92%, transparent);
+}
+.rail__item { position: relative; padding: 0 0 var(--s-4) 32px; }
+.rail__dot {
+  position: absolute; left: 5px; top: 5px;
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--c-deep);
+  border: 2px solid var(--c-cyan);
+  box-shadow: 0 0 10px var(--c-cyan-glow);
+}
+.rail__dot--amber { border-color: var(--c-amber); box-shadow: 0 0 10px var(--c-amber-glow); }
+.rail__dot--rose  { border-color: var(--c-rose);  box-shadow: 0 0 10px rgba(251, 113, 133, 0.5); }
+
+/* ── 淡入错位动画（列表逐条出现） ── */
+.stagger > * { animation: fadeUp var(--dur-slow) var(--ease-out) both; }
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 45ms; }
+.stagger > *:nth-child(3) { animation-delay: 90ms; }
+.stagger > *:nth-child(4) { animation-delay: 135ms; }
+.stagger > *:nth-child(5) { animation-delay: 180ms; }
+.stagger > *:nth-child(6) { animation-delay: 225ms; }
+.stagger > *:nth-child(7) { animation-delay: 270ms; }
+.stagger > *:nth-child(8) { animation-delay: 315ms; }
+.stagger > *:nth-child(9) { animation-delay: 360ms; }
+.stagger > *:nth-child(10) { animation-delay: 405ms; }
+.stagger > *:nth-child(n + 11) { animation-delay: 450ms; }
