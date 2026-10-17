@@ -86,7 +86,7 @@ function retry() {
 .quiz {
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  background: linear-gradient(155deg, rgba(14, 28, 60, 0.6), rgba(6, 12, 30, 0.75));
+  background: linear-gradient(155deg, rgba(var(--veil), 0.6), rgba(var(--veil), 0.75));
   padding: var(--s-4);
   display: flex; flex-direction: column; gap: var(--s-3);
 }
@@ -106,7 +106,7 @@ function retry() {
   padding: 10px 13px; text-align: left;
   border: 1px solid var(--line);
   border-radius: var(--r-sm);
-  background: rgba(8, 18, 42, 0.6);
+  background: rgba(var(--veil), 0.6);
   color: var(--t-mid); font-size: 13.5px;
   transition: all var(--dur-fast) var(--ease-out);
 }
@@ -140,7 +140,7 @@ function retry() {
 .quiz__explain .label-xs { display: block; color: var(--c-emerald); margin-bottom: 3px; }
 .quiz__again { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--t-lo); }
 .quiz__retry { color: var(--c-cyan); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-.quiz__tries { font-size: 10.5px; color: var(--t-faint); margin-left: auto; }
+.quiz__tries { font-size: 11.5px; color: var(--t-faint); margin-left: auto; }
 .explain-enter-active { transition: all 320ms var(--ease-out); }
 .explain-enter-from { opacity: 0; transform: translateY(-6px); }
 @keyframes shake {

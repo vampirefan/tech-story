@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf } from './useDemo'
+import { useDemoTouch, useRaf, useAutoDemo, seg, lerp, smooth, edgeTrigger } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -91,6 +91,26 @@ function send() {
   touch('whoosh')
 }
 
+/* 自动演示：分包发送 → 丢包重传 → 掐断一条链路看绕路 → 恢复 */
+const hit = edgeTrigger()
+useAutoDemo((t) => {
+  const s = seg(t, 8, 8, 8, 6)
+  if (s.i === 0) {
+    cut.value = false; lossRate.value = 0
+    speed.value = Math.round(lerp(0.5, 1.5, smooth(s.p)) * 2) / 2
+    if (hit(t, 0.6)) send()
+  } else if (s.i === 1) {
+    speed.value = 1; lossRate.value = Math.round(lerp(0, 35, smooth(s.p)) / 5) * 5
+    if (hit(t, 8.6) || hit(t, 12.6)) send()
+  } else if (s.i === 2) {
+    lossRate.value = 0; cut.value = s.p > 0.18
+    if (hit(t, 17.2)) send()
+  } else {
+    cut.value = false; lossRate.value = 10
+    if (hit(t, 25.2)) send()
+  }
+}, 30)
+
 function posOf(p: Pkt): { x: number; y: number } {
   const a = POS[p.path[p.seg]]
   const b = POS[p.path[Math.min(p.seg + 1, p.path.length - 1)]]
@@ -177,7 +197,7 @@ const status = computed(() => {
     icon="⇄" color="var(--cat-communication)" :status="status"
     note="1969 年 ARPANET 的第一条消息只传出了「LO」—— 本想发 LOGIN，第 3 个字符时系统就崩了">
     <svg viewBox="0 0 460 224">
-      <rect width="460" height="224" fill="#060c1c" />
+      <rect width="460" height="224" class="stage-bg" />
 
       <!-- 链路 -->
       <g v-for="[a, b] in EDGES" :key="ekey(a, b)">

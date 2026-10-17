@@ -281,7 +281,7 @@ const doneCount = computed(() => progress.researched.length)
   display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap;
   padding: var(--s-3) var(--s-5);
   border-bottom: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(8, 15, 34, 0.85), rgba(4, 9, 22, 0.7));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.85), rgba(var(--veil), 0.7));
 }
 .tree__head { gap: 2px; }
 .tree__title {
@@ -290,13 +290,14 @@ const doneCount = computed(() => progress.researched.length)
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
 }
+[data-theme='light'] .tree__title { background-image: linear-gradient(120deg, #12365c 30%, var(--c-cyan)); }
 .tree__ctrl { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; margin-left: auto; }
 .tree__prog { color: var(--c-emerald); }
 
 .tree__cats { display: flex; gap: 6px; flex-wrap: wrap; padding: 8px var(--s-5); border-bottom: 1px solid var(--line); }
 .tree__cat {
   padding: 4px 11px; border-radius: 14px; font-size: 11.5px; font-weight: 600;
-  border: 1px solid var(--line); color: var(--t-mid); background: rgba(8, 15, 34, 0.6);
+  border: 1px solid var(--line); color: var(--t-mid); background: rgba(var(--veil), 0.6);
 }
 .tree__cat.is-active { color: var(--cat); border-color: var(--cat); background: color-mix(in srgb, var(--cat) 14%, transparent); }
 
@@ -317,29 +318,29 @@ const doneCount = computed(() => progress.researched.length)
 
 .tree__node { cursor: pointer; }
 .tree__node rect {
-  fill: rgba(8, 15, 34, 0.92);
+  fill: rgba(var(--veil), 0.92);
   stroke: color-mix(in srgb, var(--cat) 55%, transparent);
   stroke-width: 1.2;
   transition: filter var(--dur-fast) var(--ease-out);
 }
 .tree__node:hover rect { filter: drop-shadow(0 0 7px color-mix(in srgb, var(--cat) 60%, transparent)); }
-.tree__node.is-done rect { stroke: var(--c-emerald); fill: color-mix(in srgb, var(--c-emerald) 12%, rgba(8, 15, 34, 0.92)); }
+.tree__node.is-done rect { stroke: var(--c-emerald); fill: color-mix(in srgb, var(--c-emerald) 12%, rgba(var(--veil), 0.92)); }
 .tree__node.is-avail rect { stroke-dasharray: none; }
-.tree__node.is-locked rect { stroke: rgba(255, 255, 255, 0.14); fill: rgba(6, 10, 22, 0.8); }
+.tree__node.is-locked rect { stroke: rgba(255, 255, 255, 0.14); fill: rgba(var(--veil), 0.8); }
 .tree__node.is-locked .tree__nname { fill: var(--t-faint); }
 .tree__node.is-dim { opacity: 0.22; }
 .tree__node.is-chain rect { stroke-width: 1.8; }
 .tree__node.is-sel rect { stroke: var(--c-amber); stroke-width: 2; filter: drop-shadow(0 0 9px var(--c-amber-glow)); }
 .tree__nflag { font-size: 12px; }
 .tree__nname { font-size: 11.5px; font-weight: 600; fill: var(--t-hi); }
-.tree__nstate { font-size: 10px; fill: var(--c-emerald); }
+.tree__nstate { font-size: 11px; fill: var(--c-emerald); }
 
 .tree__zoom { position: absolute; right: 14px; top: 14px; display: flex; gap: 6px; z-index: 5; }
 .tree__legend {
   position: absolute; left: 14px; bottom: 14px; z-index: 5;
   display: flex; gap: 14px; align-items: center;
   padding: 7px 12px; border-radius: 10px;
-  border: 1px solid var(--line); background: rgba(4, 9, 22, 0.92);
+  border: 1px solid var(--line); background: rgba(var(--veil), 0.92);
   font-size: 11px; color: var(--t-mid);
 }
 .tree__legend .lg { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
@@ -354,7 +355,7 @@ const doneCount = computed(() => progress.researched.length)
   overflow-y: auto; padding: var(--s-5);
   display: flex; flex-direction: column; gap: var(--s-4);
   border-left: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(6, 12, 30, 0.96), rgba(4, 9, 22, 0.98));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.96), rgba(var(--veil), 0.98));
   animation: slideL var(--dur-mid) var(--ease-out);
 }
 @keyframes slideL { from { transform: translateX(24px); opacity: 0; } }

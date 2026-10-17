@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, clamp } from './useDemo'
+import { useDemoTouch, useRaf, clamp, useAutoDemo, seg, lerp, smooth, edgeTrigger } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -64,6 +64,33 @@ function press() {
   window.setTimeout(() => { pressed.value = false }, 900)
 }
 function recycle() { reused.value += stick.value.length; stick.value = []; touch('confirm') }
+
+/* 自动演示：雕版逐字刻 → 刻错一字整版报废 → 活字排版印刷回收 → 成本曲线 */
+const hit = edgeTrigger()
+let lastCarve = -1
+let lastPick = -1
+useAutoDemo((t) => {
+  const s = seg(t, 11, 5, 12, 6)
+  if (s.i === 0) {
+    mode.value = 'block'
+    const tick = Math.floor(t * 1.4)
+    if (carved.value < SENT.length && tick > lastCarve) { lastCarve = tick; carve() }
+  } else if (s.i === 1) {
+    if (hit(t, 11.5)) breakIt()
+    if (hit(t, 13.5)) recarveBlock()
+  } else if (s.i === 2) {
+    mode.value = 'type'
+    const want = Math.min(SENT.length, Math.floor(s.p * 13))
+    const tick = Math.floor(t * 2)
+    if (want > stick.value.length && tick > lastPick) { lastPick = tick; pick(SENT[stick.value.length % SENT.length]) }
+    if (hit(t, 19)) press()
+    if (hit(t, 21)) press()
+    if (hit(t, 22.6)) recycle()
+  } else {
+    mode.value = 'cost'
+    logCopies.value = lerp(0.4, 4, smooth(s.p))
+  }
+}, 34)
 
 /* ── 成本曲线 ── */
 const logCopies = ref(2.3)
@@ -141,7 +168,7 @@ const status = computed(() => {
           <stop offset="0" stop-color="#f7efdb" /><stop offset="1" stop-color="#d3c39d" />
         </linearGradient>
       </defs>
-      <rect width="460" height="210" fill="#060c1c" />
+      <rect width="460" height="210" class="stage-bg" />
 
       <!-- ══ 雕版 ══ -->
       <g v-if="mode === 'block'">
@@ -218,14 +245,14 @@ const status = computed(() => {
 
       <!-- ══ 成本曲线 ══ -->
       <g v-if="mode === 'cost'">
-        <line :x1="X0" y1="16" :x2="X0" :y2="Y0" stroke="rgba(120,190,255,0.28)" />
-        <line :x1="X0" :y1="Y0" :x2="X0 + XW" :y2="Y0" stroke="rgba(120,190,255,0.28)" />
+        <line :x1="X0" y1="16" :x2="X0" :y2="Y0" stroke="rgba(var(--tint),0.28)" />
+        <line :x1="X0" :y1="Y0" :x2="X0 + XW" :y2="Y0" stroke="rgba(var(--tint),0.28)" />
         <g v-for="i in 5" :key="i">
-          <line :x1="X0" :y1="Y0 - (i - 1) * (YH / 4)" :x2="X0 + XW" :y2="Y0 - (i - 1) * (YH / 4)" stroke="rgba(120,190,255,0.08)" />
+          <line :x1="X0" :y1="Y0 - (i - 1) * (YH / 4)" :x2="X0 + XW" :y2="Y0 - (i - 1) * (YH / 4)" stroke="rgba(var(--tint),0.08)" />
           <text :x="X0 - 6" :y="Y0 - (i - 1) * (YH / 4) + 4" text-anchor="end" class="lbl" font-size="9">{{ (i - 1) * 30 }}</text>
         </g>
         <g v-for="e in 5" :key="'x' + e">
-          <line :x1="lx(Math.pow(10, e - 1))" y1="16" :x2="lx(Math.pow(10, e - 1))" :y2="Y0" stroke="rgba(120,190,255,0.08)" />
+          <line :x1="lx(Math.pow(10, e - 1))" y1="16" :x2="lx(Math.pow(10, e - 1))" :y2="Y0" stroke="rgba(var(--tint),0.08)" />
           <text :x="lx(Math.pow(10, e - 1))" :y="Y0 + 14" text-anchor="middle" class="lbl" font-size="9">
             {{ e - 1 === 0 ? '1' : e - 1 === 1 ? '10' : e - 1 === 2 ? '100' : e - 1 === 3 ? '1千' : '1万' }}
           </text>
@@ -242,7 +269,7 @@ const status = computed(() => {
         <circle :cx="lx(copies)" :cy="ly(handCost)" r="4" fill="#fb7185" />
         <!-- 图例 -->
         <g transform="translate(300,26)">
-          <rect x="-8" y="-12" width="150" height="58" rx="5" fill="rgba(6,12,28,0.8)" stroke="rgba(120,190,255,0.18)" />
+          <rect x="-8" y="-12" width="150" height="58" rx="5" fill="rgba(var(--veil),0.8)" stroke="rgba(var(--tint),0.18)" />
           <line x1="0" y1="0" x2="18" y2="0" stroke="#fb7185" stroke-width="2.2" /><text x="24" y="4" class="lbl">手抄本（每册 5 个月）</text>
           <line x1="0" y1="16" x2="18" y2="16" stroke="#34d399" stroke-width="2.2" /><text x="24" y="20" class="lbl">印刷本（制版贵，复印几乎免费）</text>
           <line x1="0" y1="32" x2="18" y2="32" stroke="#8fd0ff" stroke-width="1.6" stroke-dasharray="5 4" /><text x="24" y="36" class="lbl">识字率</text>

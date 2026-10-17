@@ -25,6 +25,8 @@ const router = useRouter()
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 const labelEl = ref<HTMLElement | null>(null)
 const engine = shallowRef<GlobeEngine | null>(null)
+/** 本次挂载的地球是否就绪：重入时重建引擎的几百毫秒也要有遮罩，不能露黑画布 */
+const sceneReady = ref(false)
 
 /* ── 悬停提示 ── */
 const tipNode = ref<TechNode | null>(null)
@@ -152,7 +154,7 @@ onMounted(async () => {
     onDistance,
     onClickNode,
     onReady: () => {
-      ui.setAssetsReady()
+      sceneReady.value = true
       hintTimer = window.setTimeout(() => { hintOn.value = false }, 11000)
     }
   })
@@ -161,6 +163,7 @@ onMounted(async () => {
   eng.setPaused(modalOpen.value)
   if (import.meta.env.DEV) (window as unknown as { __globe?: GlobeEngine }).__globe = eng
   await eng.init()
+  eng.ensureLoop()
 
   eng.setYear(ui.year)
   eng.setEra(ui.eraId)
@@ -206,12 +209,12 @@ onBeforeUnmount(() => {
     />
 
     <Transition name="gfade">
-      <div v-if="hintOn && ui.assetsReady" class="globe-hint">
+      <div v-if="hintOn && sceneReady" class="globe-hint">
         <span>🖱️ 拖动旋转地球 · 滚轮缩放 · <b>点击光柱</b>研究这项技术 · 再点一次进入详情</span>
       </div>
     </Transition>
 
-    <div class="globe-loading" :class="{ 'is-done': ui.assetsReady }">
+    <div class="globe-loading" :class="{ 'is-done': sceneReady }">
       <div class="globe-loading__inner">
         <div class="globe-loading__ring" />
         <div class="globe-loading__t">TERRA · {{ ERA_MAP[ui.eraId].short }}</div>

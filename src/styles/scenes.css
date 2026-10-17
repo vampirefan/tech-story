@@ -36,6 +36,7 @@
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
 }
+[data-theme='light'] .scene-head__title { background-image: linear-gradient(120deg, #12365c 20%, var(--c-cyan) 62%, var(--c-amber) 100%); }
 .scene-head__sub { font-size: 13.5px; color: var(--t-mid); max-width: 74ch; line-height: 1.75; }
 
 /* ── 章节 ── */
@@ -66,7 +67,7 @@
 .loading {
   position: absolute; inset: 0; z-index: 60;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-4);
-  background: radial-gradient(ellipse 80% 60% at 50% 45%, rgba(0, 60, 120, 0.28), transparent 70%), rgba(3, 6, 15, 0.94);
+  background: radial-gradient(ellipse 80% 60% at 50% 45%, rgba(var(--veil), 0.28), transparent 70%), rgba(var(--veil), 0.94);
 }
 .loading__text {
   font-family: var(--f-display); font-size: 12px; letter-spacing: 0.28em;
@@ -92,7 +93,7 @@
   position: relative; min-width: 0;
   overflow-y: auto;
   border-left: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(6, 12, 30, 0.9), rgba(4, 9, 22, 0.96));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.9), rgba(var(--veil), 0.96));
 }
 @media (max-width: 1024px) {
   .split { grid-template-columns: minmax(0, 1fr); grid-template-rows: 42vh minmax(0, 1fr); }

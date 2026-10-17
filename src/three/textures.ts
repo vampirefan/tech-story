@@ -112,9 +112,25 @@ function loadOne(loader: THREE.TextureLoader, src: string, srgb: boolean, aniso:
 /**
  * 并行加载全部地球纹理，onProgress 收到 0-1。
  * 任何一张失败都抛错——上层需要显式的失败态而不是静默的黑球。
+ * 结果做模块级缓存：场景反复进出时地球秒回，不必重新解码贴图（重入期间的黑屏空窗）。
+ * 缓存的纹理是共享资产，使用方不得 dispose（见 GlobeEngine.dispose）。
  */
-export async function loadEarthTextures(
+let texCache: Promise<EarthTextures> | null = null
+
+export function loadEarthTextures(
   aniso = 8,
+  onProgress?: (p: number, label: string) => void
+): Promise<EarthTextures> {
+  if (texCache) {
+    onProgress?.(1, '纹理就绪')
+    return texCache
+  }
+  texCache = doLoad(aniso, onProgress).catch((e) => { texCache = null; throw e })
+  return texCache
+}
+
+async function doLoad(
+  aniso: number,
   onProgress?: (p: number, label: string) => void
 ): Promise<EarthTextures> {
   const loader = new THREE.TextureLoader()

@@ -1,0 +1,322 @@
+{
+  "b_sapiens": {
+    "file": "b_sapiens.jpg",
+    "matched": "Sapiens · Yuval Noah Harari",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Sapiens%20A%20Brief%20History%20of%20Humankind%20Harari"
+  },
+  "b_guns": {
+    "file": "b_guns.jpg",
+    "matched": "Guns, Germs, and Steel · Jared Diamond",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Guns%20Germs%20and%20Steel%20Diamond"
+  },
+  "b_bryson": {
+    "file": "b_bryson.jpg",
+    "matched": "A short history of nearly everything · Bill Bryson",
+    "sourceUrl": "https://openlibrary.org/search.json?q=A%20Short%20History%20of%20Nearly%20Everything%20Bryson"
+  },
+  "b_needham": {
+    "file": "b_needham.jpg",
+    "matched": "Science and civilisation in China · Joseph Needham",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Science%20and%20Civilisation%20in%20China%20Needham"
+  },
+  "b_david": {
+    "file": "b_david.jpg",
+    "matched": "The Way Things Work · David Macaulay",
+    "sourceUrl": "https://openlibrary.org/search.json?q=The%20Way%20Things%20Work%20Macaulay"
+  },
+  "b_gamow": {
+    "file": "b_gamow.jpg",
+    "matched": "One, two, three ... infinity · George Gamow",
+    "sourceUrl": "https://openlibrary.org/search.json?q=One%20Two%20Three%20Infinity%20Gamow"
+  },
+  "b_hawking": {
+    "file": "b_hawking.jpg",
+    "matched": "A Brief History of Time · Stephen Hawking",
+    "sourceUrl": "https://openlibrary.org/search.json?q=A%20Brief%20History%20of%20Time%20Hawking"
+  },
+  "b_hillyer": {
+    "file": "b_hillyer.jpg",
+    "matched": "A child's history of the world · V. M. Hillyer",
+    "sourceUrl": "https://openlibrary.org/search.json?q=A%20Child%20History%20of%20the%20World%20Hillyer"
+  },
+  "b_snz": {
+    "file": "b_snz.jpg",
+    "matched": "Red Star Over China - The Rise Of The Red Army · Edgar Snow",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Red%20Star%20Over%20China%20Snow"
+  },
+  "b_chipwar": {
+    "file": "b_chipwar.jpg",
+    "matched": "Chip War · Chris Miller",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Chip%20War%20Miller"
+  },
+  "b_info": {
+    "file": "b_info.jpg",
+    "matched": "The Information · James Gleick",
+    "sourceUrl": "https://openlibrary.org/search.json?q=The%20Information%20Gleick"
+  },
+  "b_innovators": {
+    "file": "b_innovators.jpg",
+    "matched": "The Innovators · Walter Isaacson",
+    "sourceUrl": "https://openlibrary.org/search.json?q=The%20Innovators%20Isaacson"
+  },
+  "b_jobs": {
+    "file": "b_jobs.jpg",
+    "matched": "Steve Jobs · Walter Isaacson",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Steve%20Jobs%20Isaacson"
+  },
+  "b_turing": {
+    "file": "b_turing.jpg",
+    "matched": "Alan Turing · Andrew Hodges",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Alan%20Turing%20The%20Enigma%20Hodges"
+  },
+  "b_gene": {
+    "file": "b_gene.jpg",
+    "matched": "The Gene · Siddhartha Mukherjee",
+    "sourceUrl": "https://openlibrary.org/search.json?q=The%20Gene%20Mukherjee"
+  },
+  "b_dblhelix": {
+    "file": "b_dblhelix.jpg",
+    "matched": "The double helix · James D. Watson",
+    "sourceUrl": "https://openlibrary.org/search.json?q=The%20Double%20Helix%20Watson"
+  },
+  "b_mars": {
+    "file": "b_mars.jpg",
+    "matched": "The Martian · Andy Weir",
+    "sourceUrl": "https://openlibrary.org/search.json?q=The%20Martian%20Weir"
+  },
+  "b_verne_moon": {
+    "file": "b_verne_moon.jpg",
+    "matched": "De la terre à la lune · Jules Verne",
+    "sourceUrl": "https://openlibrary.org/search.json?q=From%20the%20Earth%20to%20the%20Moon%20Verne"
+  },
+  "b_verne_sub": {
+    "file": "b_verne_sub.jpg",
+    "matched": "Vingt mille lieues sous les mers · Jules Verne",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Twenty%20Thousand%20Leagues%20Under%20the%20Sea%20Verne"
+  },
+  "b_asimov": {
+    "file": "b_asimov.jpg",
+    "matched": "Foundation · Isaac Asimov",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Foundation%20Asimov"
+  },
+  "b_robots": {
+    "file": "b_robots.jpg",
+    "matched": "I, Robot · Isaac Asimov",
+    "sourceUrl": "https://openlibrary.org/search.json?q=I%20Robot%20Asimov"
+  },
+  "b_silent": {
+    "file": "b_silent.jpg",
+    "matched": "Silent Spring · Rachel Carson",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Silent%20Spring%20Carson"
+  },
+  "g_civ6": {
+    "file": "g_civ6.jpg",
+    "matched": "Sid Meier’s Civilization® VI",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/289070/library_600x900.jpg"
+  },
+  "g_humankind": {
+    "file": "g_humankind.jpg",
+    "matched": "HUMANKIND™",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/1124300/library_600x900.jpg"
+  },
+  "g_aoe": {
+    "file": "g_aoe.jpg",
+    "matched": "Age of Empires II: Definitive Edition",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/813780/library_600x900.jpg"
+  },
+  "g_totalwar": {
+    "file": "g_totalwar.jpg",
+    "matched": "Total War: THREE KINGDOMS",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/779340/library_600x900.jpg"
+  },
+  "g_discovery": {
+    "file": "g_discovery.jpg",
+    "matched": "Discovery Tour by Assassin’s Creed®: Ancient Egypt",
+    "sourceUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/775430/header.jpg?t=1765572523"
+  },
+  "g_minecraft": {
+    "file": "g_minecraft.jpg",
+    "matched": "Minecraft: Play with Friends! · Mojang",
+    "sourceUrl": "https://apps.apple.com/us/app/minecraft-play-with-friends/id479516143?uo=4"
+  },
+  "g_ksp": {
+    "file": "g_ksp.jpg",
+    "matched": "Kerbal Space Program",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/220200/library_600x900.jpg"
+  },
+  "g_sfs": {
+    "file": "g_sfs.jpg",
+    "matched": "Spaceflight Simulator",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/1718870/library_600x900.jpg"
+  },
+  "g_factorio": {
+    "file": "g_factorio.jpg",
+    "matched": "Factorio",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/427520/library_600x900.jpg"
+  },
+  "g_dyson": {
+    "file": "g_dyson.jpg",
+    "matched": "Dyson Sphere Program",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/1366540/library_600x900.jpg"
+  },
+  "g_oxygen": {
+    "file": "g_oxygen.jpg",
+    "matched": "Oxygen Not Included",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/457140/library_600x900.jpg"
+  },
+  "g_cities": {
+    "file": "g_cities.jpg",
+    "matched": "Cities: Skylines",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/255710/library_600x900.jpg"
+  },
+  "g_hrm": {
+    "file": "g_hrm.jpg",
+    "matched": "Human Resource Machine",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/375820/library_600x900.jpg"
+  },
+  "g_wtl": {
+    "file": "g_wtl.jpg",
+    "matched": "while True: learn()",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/619150/library_600x900.jpg"
+  },
+  "g_opus": {
+    "file": "g_opus.jpg",
+    "matched": "Opus Magnum",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/558990/library_600x900.jpg"
+  },
+  "g_besiege": {
+    "file": "g_besiege.jpg",
+    "matched": "Besiege",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/346010/library_600x900.jpg"
+  },
+  "g_universe": {
+    "file": "g_universe.jpg",
+    "matched": "Universe Sandbox",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/230290/library_600x900.jpg"
+  },
+  "g_outerwilds": {
+    "file": "g_outerwilds.jpg",
+    "matched": "Outer Wilds",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/753640/library_600x900.jpg"
+  },
+  "g_terra": {
+    "file": "g_terra.jpg",
+    "matched": "Terra Nil",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/1593030/library_600x900.jpg"
+  },
+  "g_portal2": {
+    "file": "g_portal2.jpg",
+    "matched": "Portal 2",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/620/library_600x900.jpg"
+  },
+  "g_msedu": {
+    "file": "g_msedu.jpg",
+    "matched": "Minecraft Education · Mojang",
+    "sourceUrl": "https://apps.apple.com/us/app/minecraft-education/id1196524622?uo=4"
+  },
+  "mu_mozart": {
+    "file": "mu_mozart.jpg",
+    "matched": "Mozart · Various Artists",
+    "sourceUrl": "https://music.apple.com/us/album/mozart/494863852?uo=4"
+  },
+  "mu_beethoven5": {
+    "file": "mu_beethoven5.jpg",
+    "matched": "Beethoven: Symphony No. 5 · Kurt Masur & New York Philharmonic",
+    "sourceUrl": "https://music.apple.com/us/album/beethoven-symphony-no-5/1513036712?uo=4"
+  },
+  "mu_beethoven9": {
+    "file": "mu_beethoven9.jpg",
+    "matched": "Beethoven: Symphony No. 9 · Berlin Philharmonic Orchestra & Herbert von Karajan",
+    "sourceUrl": "https://music.apple.com/us/album/beethoven-symphony-no-9/1440743071?uo=4"
+  },
+  "mu_vivaldi": {
+    "file": "mu_vivaldi.jpg",
+    "matched": "Vivaldi: The Four Seasons · Itzhak Perlman, London Philharmonic Orchestra & Israel Philharmonic Orchestra",
+    "sourceUrl": "https://music.apple.com/us/album/vivaldi-the-four-seasons/693711974?uo=4"
+  },
+  "mu_bach": {
+    "file": "mu_bach.jpg",
+    "matched": "Bach: Air On the G String · Jonathan Carney & Royal Philharmonic Orchestra",
+    "sourceUrl": "https://music.apple.com/us/album/bach-air-on-the-g-string/204812854?uo=4"
+  },
+  "mu_holst_mars": {
+    "file": "mu_holst_mars.jpg",
+    "matched": "Holst: The Planets · Boston Pops Orchestra & John Williams",
+    "sourceUrl": "https://music.apple.com/us/album/holst-the-planets/1452605497?uo=4"
+  },
+  "mu_holst_jupiter": {
+    "file": "mu_holst_jupiter.jpg",
+    "matched": "Holst: The Planets · Berlin Philharmonic Orchestra, Rundfunkchor, Berlin & Sir Simon Rattle",
+    "sourceUrl": "https://music.apple.com/us/album/holst-the-planets/769116904?uo=4"
+  },
+  "mu_debussy": {
+    "file": "mu_debussy.jpg",
+    "matched": "Debussy: Clair de Lune - EP · Claude Debussy & Roland Pöntinen",
+    "sourceUrl": "https://music.apple.com/us/album/debussy-clair-de-lune-ep/1558134769?uo=4"
+  },
+  "mu_grieg": {
+    "file": "mu_grieg.jpg",
+    "matched": "Grieg: Peer Gynt Suites & Sibelius: Valse Triste · Berlin Philharmonic Orchestra & Herbert von Karajan",
+    "sourceUrl": "https://music.apple.com/us/album/grieg-peer-gynt-suites-sibelius-valse-triste/1440723920?uo=4"
+  },
+  "mu_strauss": {
+    "file": "mu_strauss.jpg",
+    "matched": "Blue Danube - The Waltzes of Johann Strauss, Jr. · Various Artists",
+    "sourceUrl": "https://music.apple.com/us/album/blue-danube-the-waltzes-of-johann-strauss-jr/379111062?uo=4"
+  },
+  "mu_tchaikovsky": {
+    "file": "mu_tchaikovsky.jpg",
+    "matched": "Tchaikovsky: 1812 Overture, Marche Slave, Romeo and Juliet, Capriccio Italien, Hamlet (Expanded Edition) · Leonard Bernstein & New York Philharmonic",
+    "sourceUrl": "https://music.apple.com/us/album/tchaikovsky-1812-overture-marche-slave-romeo-and/155669035?uo=4"
+  },
+  "mu_sousa": {
+    "file": "mu_sousa.jpg",
+    "matched": "Sousa: Stars and Stripes Forever · Eastman Wind Ensemble & Frederick Fennell",
+    "sourceUrl": "https://music.apple.com/us/album/sousa-stars-and-stripes-forever/1452625243?uo=4"
+  },
+  "mu_chopin": {
+    "file": "mu_chopin.jpg",
+    "matched": "Chopin: Nocturne, Op. 9, No. 2 - Single · Anna Miernik",
+    "sourceUrl": "https://music.apple.com/us/album/chopin-nocturne-op-9-no-2-single/1688152422?uo=4"
+  },
+  "mu_dvorak": {
+    "file": "mu_dvorak.jpg",
+    "matched": "Dvorak: Symphony No. 9 \"New World\" · Berlin Philharmonic Orchestra, Rafael Kubelik & Boston Symphony Orchestra",
+    "sourceUrl": "https://music.apple.com/us/album/dvorak-symphony-no-9-new-world/1452134343?uo=4"
+  },
+  "mu_satie": {
+    "file": "mu_satie.jpg",
+    "matched": "Satie: Gymnopedie No 1 - EP · Roland Pöntinen & Erik Satie",
+    "sourceUrl": "https://music.apple.com/us/album/satie-gymnopedie-no-1-ep/1531674543?uo=4"
+  },
+  "b_feynman": {
+    "file": "b_feynman.jpg",
+    "matched": "\"Surely You're Joking, Mr. Feynman\" · Richard Phillips Feynman",
+    "sourceUrl": "https://openlibrary.org/search.json?q=Surely%20You're%20Joking%2C%20Mr.%20Feynman!"
+  },
+  "b_santi": {
+    "file": "b_santi.jpg",
+    "matched": "三体 · 刘慈欣",
+    "sourceUrl": "https://openlibrary.org/search.json?q=The%20Three-Body%20Problem"
+  },
+  "b_liulang": {
+    "file": "b_liulang.jpg",
+    "matched": "流浪地球 · 刘慈欣",
+    "sourceUrl": "https://openlibrary.org/search.json?q=%E6%B5%81%E6%B5%AA%E5%9C%B0%E7%90%83"
+  },
+  "g_frostpunk": {
+    "file": "g_frostpunk.jpg",
+    "matched": "Frostpunk",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/323190/library_600x900.jpg"
+  },
+  "g_polybridge": {
+    "file": "g_polybridge.jpg",
+    "matched": "Poly Bridge",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/367450/library_600x900.jpg"
+  },
+  "g_msfs": {
+    "file": "g_msfs.jpg",
+    "matched": "Microsoft Flight Simulator (2020) 40th Anniversary Edition",
+    "sourceUrl": "https://steamcdn-a.akamaihd.net/steam/apps/1250410/library_600x900.jpg"
+  }
+}

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, clamp } from './useDemo'
+import { useDemoTouch, useRaf, clamp, useAutoDemo, seg, edgeTrigger } from './useDemo'
 
 const props = defineProps<{ demoId: string; title: string; hint?: string; points?: string[]; nodeId?: string }>()
 const touch = useDemoTouch()
@@ -136,6 +136,35 @@ const cellOn = (i: number, s: number) => {
   return pipeOn.value ? c === i + s : s === 0 && i === 0
 }
 
+/* 自动演示：五个模式轮着演一遍 */
+const hit = edgeTrigger()
+useAutoDemo((t) => {
+  const s = seg(t, 8, 8, 8, 9, 7)
+  if (s.i === 0) {
+    mode.value = 'gates'
+    gate.value = (['AND', 'OR', 'NOT', 'XOR', 'NAND'] as const)[Math.min(4, Math.floor(s.p * 5))]
+    A.value = Math.floor(t * 1.1) % 2 === 0
+    B.value = Math.floor(t * 0.7) % 2 === 0
+  } else if (s.i === 1) {
+    mode.value = 'adder'
+    const n = Math.min(15, Math.floor(s.p * 16))
+    if (nA.value !== n) {
+      bitsA.value = [0, 1, 2, 3].map(i => ((n >> i) & 1) === 1)
+      bitsB.value = [0, 1, 2, 3].map(i => (((15 - n) >> i) & 1) === 1)
+    }
+  } else if (s.i === 2) {
+    mode.value = 'code'
+    codeStep.value = Math.min(CODE.length - 1, Math.floor(s.p * CODE.length))
+  } else if (s.i === 3) {
+    mode.value = 'neuron'
+    if (hit(t, 24.3)) { w1.value = 0.9; w2.value = -0.7; bias.value = -0.1; epoch.value = 0; lr.value = 0.6; training.value = true }
+  } else {
+    mode.value = 'pipeline'
+    pipeOn.value = s.p < 0.5
+    if (hit(t, 36.5)) pipeT.value = 0
+  }
+}, 40)
+
 const status = computed(() => {
   switch (mode.value) {
     case 'gates': return { text: `${gate.value} 门：A=${A.value ? 1 : 0}，B=${B.value ? 1 : 0} → 输出 ${out.value ? 1 : 0}。真值表里高亮的那一行，就是现在的输入组合。`, kind: out.value ? 'good' as const : 'info' as const }
@@ -159,7 +188,7 @@ const status = computed(() => {
 
     <!-- ══ 逻辑门 ══ -->
     <svg v-if="mode === 'gates'" viewBox="0 0 460 200">
-      <rect width="460" height="200" fill="#060c1c" />
+      <rect width="460" height="200" class="stage-bg" />
       <!-- 输入 -->
       <g v-for="(v, i) in [{ on: A, y: 62, n: 'A' }, { on: B, y: 122, n: 'B' }]" :key="v.n">
         <line x1="60" :y1="v.y" x2="150" :y2="v.y" :stroke="v.on ? '#34d399' : '#39414f'" stroke-width="3" />
@@ -191,7 +220,7 @@ const status = computed(() => {
       <text x="304" y="126" text-anchor="middle" class="lbl" font-size="9.5">输出（灯泡）</text>
       <!-- 真值表 -->
       <g transform="translate(352,30)">
-        <rect x="-8" y="-16" width="112" height="118" rx="6" fill="rgba(6,12,28,0.85)" stroke="rgba(120,190,255,0.18)" />
+        <rect x="-8" y="-16" width="112" height="118" rx="6" fill="rgba(var(--veil),0.85)" stroke="rgba(var(--tint),0.18)" />
         <text x="14" y="0" class="lbl" font-size="9">A</text><text x="42" y="0" class="lbl" font-size="9">B</text><text x="72" y="0" class="lbl" font-size="9">出</text>
         <g v-for="(r, i) in rows" :key="i">
           <rect v-if="r.a === A && (gate === 'NOT' || r.b === B)" x="-6" :y="6 + i * 24" width="108" height="20" rx="3"
@@ -206,7 +235,7 @@ const status = computed(() => {
 
     <!-- ══ 加法器 ══ -->
     <svg v-else-if="mode === 'adder'" viewBox="0 0 460 200">
-      <rect width="460" height="200" fill="#060c1c" />
+      <rect width="460" height="200" class="stage-bg" />
       <g v-for="i in 4" :key="i">
         <g :transform="`translate(${60 + (4 - i) * 76},0)`">
           <!-- A 位 -->
@@ -227,25 +256,25 @@ const status = computed(() => {
           <text x="38" y="86" class="lbl" font-size="8" :fill="adderSteps[i - 1].cout ? '#ffb347' : '#4a5568'">进位</text>
           <!-- 本位输出 -->
           <line x1="0" y1="122" x2="0" y2="150" :stroke="adderSteps[i - 1].s ? '#ffd166' : '#39414f'" stroke-width="2.4" />
-          <rect x="-16" y="150" width="32" height="26" rx="4" :fill="adderSteps[i - 1].s ? 'rgba(255,209,102,0.22)' : 'rgba(120,190,255,0.06)'"
+          <rect x="-16" y="150" width="32" height="26" rx="4" :fill="adderSteps[i - 1].s ? 'rgba(255,209,102,0.22)' : 'rgba(var(--tint),0.06)'"
             :stroke="adderSteps[i - 1].s ? '#ffd166' : '#39414f'" stroke-width="1.4" />
           <text x="0" y="168" text-anchor="middle" font-size="13" font-weight="700" :fill="adderSteps[i - 1].s ? '#ffd166' : '#4a5568'">{{ adderSteps[i - 1].s ? 1 : 0 }}</text>
           <text x="0" y="24" text-anchor="middle" class="lbl" font-size="9">2^{{ i - 1 }} = {{ 2 ** (i - 1) }}</text>
         </g>
       </g>
       <!-- 最高位进位 -->
-      <rect x="14" y="150" width="32" height="26" rx="4" :fill="sumBits[4] ? 'rgba(255,209,102,0.22)' : 'rgba(120,190,255,0.06)'"
+      <rect x="14" y="150" width="32" height="26" rx="4" :fill="sumBits[4] ? 'rgba(255,209,102,0.22)' : 'rgba(var(--tint),0.06)'"
         :stroke="sumBits[4] ? '#ffd166' : '#39414f'" stroke-width="1.4" />
       <text x="30" y="168" text-anchor="middle" font-size="13" font-weight="700" :fill="sumBits[4] ? '#ffd166' : '#4a5568'">{{ sumBits[4] ? 1 : 0 }}</text>
       <text x="30" y="144" text-anchor="middle" class="lbl" font-size="8.5">溢出</text>
       <!-- 算式 -->
       <g transform="translate(330,40)">
-        <rect x="-10" y="-24" width="140" height="152" rx="6" fill="rgba(6,12,28,0.85)" stroke="rgba(120,190,255,0.18)" />
+        <rect x="-10" y="-24" width="140" height="152" rx="6" fill="rgba(var(--veil),0.85)" stroke="rgba(var(--tint),0.18)" />
         <text class="lbl" font-size="9">A = {{ bitsA.slice().reverse().map(b => b ? 1 : 0).join('') }}</text>
         <text class="val" x="120" text-anchor="end" font-size="12">{{ nA }}</text>
         <text class="lbl" font-size="9" y="20">B = {{ bitsB.slice().reverse().map(b => b ? 1 : 0).join('') }}</text>
         <text class="val" x="120" y="20" text-anchor="end" font-size="12">{{ nB }}</text>
-        <line x1="0" y1="30" x2="120" y2="30" stroke="rgba(120,190,255,0.25)" />
+        <line x1="0" y1="30" x2="120" y2="30" stroke="rgba(var(--tint),0.25)" />
         <text class="lbl" font-size="9" y="48">和 = {{ sumBits.slice().reverse().map(b => b ? 1 : 0).join('') }}</text>
         <text class="val" x="120" y="48" text-anchor="end" font-size="14" fill="#ffd166">{{ sum }}</text>
         <text class="lbl" font-size="8.5" y="70" fill="#a9c1de">XOR 输出本位和</text>
@@ -257,15 +286,15 @@ const status = computed(() => {
 
     <!-- ══ 一行代码 ══ -->
     <svg v-else-if="mode === 'code'" viewBox="0 0 460 200">
-      <rect width="460" height="200" fill="#060c1c" />
+      <rect width="460" height="200" class="stage-bg" />
       <g v-for="(c, i) in CODE" :key="i" :transform="`translate(${16 + i * 112},20)`" style="cursor:pointer" @click="codeStep = i; touch('page')">
-        <rect width="102" height="150" rx="6" :fill="codeStep === i ? 'rgba(180,140,255,0.14)' : 'rgba(120,190,255,0.04)'"
-          :stroke="codeStep === i ? '#b48cff' : 'rgba(120,190,255,0.18)'" stroke-width="1.4" />
+        <rect width="102" height="150" rx="6" :fill="codeStep === i ? 'rgba(180,140,255,0.14)' : 'rgba(var(--tint),0.04)'"
+          :stroke="codeStep === i ? '#b48cff' : 'rgba(var(--tint),0.18)'" stroke-width="1.4" />
         <text x="10" y="20" class="lbl" font-size="8.5">STEP {{ i + 1 }}</text>
         <text x="10" y="36" class="lbl-hi" font-size="11">{{ c.n }}</text>
         <foreignObject x="8" y="44" width="86" height="98">
           <div xmlns="http://www.w3.org/1999/xhtml"
-            style="font-family:var(--f-mono);font-size:8.5px;line-height:1.5;color:#a9c1de;white-space:pre-wrap;word-break:break-all">{{ c.s }}</div>
+            style="font-family:var(--f-mono);font-size: 10px;line-height:1.5;color:#a9c1de;white-space:pre-wrap;word-break:break-all">{{ c.s }}</div>
         </foreignObject>
         <path v-if="i < 3" :d="`M104,75 l8,-5 v10 z`" fill="#b48cff" :opacity="codeStep > i ? 1 : 0.4" />
       </g>
@@ -274,13 +303,13 @@ const status = computed(() => {
 
     <!-- ══ 神经元 ══ -->
     <svg v-else-if="mode === 'neuron'" viewBox="0 0 460 200">
-      <rect width="460" height="200" fill="#060c1c" />
+      <rect width="460" height="200" class="stage-bg" />
       <!-- 决策区 -->
       <g>
-        <rect x="150" y="20" width="130" height="130" rx="4" fill="rgba(120,190,255,0.04)" stroke="rgba(120,190,255,0.2)" />
+        <rect x="150" y="20" width="130" height="130" rx="4" fill="rgba(var(--tint),0.04)" stroke="rgba(var(--tint),0.2)" />
         <g v-for="i in 4" :key="i">
-          <line :x1="150 + i * 26" y1="20" :x2="150 + i * 26" y2="150" stroke="rgba(120,190,255,0.07)" />
-          <line x1="150" :y1="20 + i * 26" x2="280" :y2="20 + i * 26" stroke="rgba(120,190,255,0.07)" />
+          <line :x1="150 + i * 26" y1="20" :x2="150 + i * 26" y2="150" stroke="rgba(var(--tint),0.07)" />
+          <line x1="150" :y1="20 + i * 26" x2="280" :y2="20 + i * 26" stroke="rgba(var(--tint),0.07)" />
         </g>
         <path :d="boundary" stroke="#ffd166" stroke-width="2" stroke-dasharray="6 4" />
         <g v-for="(p, i) in DATA" :key="i">
@@ -309,10 +338,10 @@ const status = computed(() => {
       </g>
       <!-- 损失曲线 -->
       <g transform="translate(300,20)">
-        <rect x="0" y="0" width="144" height="130" rx="6" fill="rgba(6,12,28,0.85)" stroke="rgba(120,190,255,0.18)" />
+        <rect x="0" y="0" width="144" height="130" rx="6" fill="rgba(var(--veil),0.85)" stroke="rgba(var(--tint),0.18)" />
         <text x="10" y="18" class="lbl" font-size="9">损失（越小越准）</text>
         <text x="134" y="18" text-anchor="end" class="val" font-size="11">{{ loss.toFixed(4) }}</text>
-        <rect x="10" y="30" width="124" height="8" rx="4" fill="rgba(120,190,255,0.12)" />
+        <rect x="10" y="30" width="124" height="8" rx="4" fill="rgba(var(--tint),0.12)" />
         <rect x="10" y="30" :width="clamp(loss / 0.7, 0, 1) * 124" height="8" rx="4" :fill="loss < 0.05 ? '#34d399' : '#ffb347'" />
         <text x="10" y="58" class="lbl" font-size="9">准确率</text>
         <text x="134" y="58" text-anchor="end" class="val" font-size="11" fill="#34d399">{{ (accuracy * 100).toFixed(0) }}%</text>
@@ -326,17 +355,17 @@ const status = computed(() => {
 
     <!-- ══ 流水线 ══ -->
     <svg v-else viewBox="0 0 460 200">
-      <rect width="460" height="200" fill="#060c1c" />
+      <rect width="460" height="200" class="stage-bg" />
       <g v-for="(s, si) in STAGES" :key="s">
         <text :x="146 + si * 62" y="34" text-anchor="middle" class="lbl" font-size="10" :fill="pipeCycle % 5 === si ? '#ffd166' : '#64809f'">{{ s }}</text>
-        <line :x1="146 + si * 62" y1="40" :x2="146 + si * 62" y2="176" stroke="rgba(120,190,255,0.12)" />
+        <line :x1="146 + si * 62" y1="40" :x2="146 + si * 62" y2="176" stroke="rgba(var(--tint),0.12)" />
       </g>
       <g v-for="(ins, i) in INSTR" :key="ins.a">
         <text x="20" :y="60 + i * 30" class="val" font-size="10.5">{{ ins.a }}</text>
         <g v-for="(st, si) in STAGES" :key="si">
           <rect :x="146 + si * 62 - 27" :y="48 + i * 30" width="54" height="22" rx="4"
-            :fill="cellOn(i, si) ? 'rgba(180,140,255,0.42)' : 'rgba(120,190,255,0.06)'"
-            :stroke="cellOn(i, si) ? '#b48cff' : 'rgba(120,190,255,0.14)'" stroke-width="1.2" />
+            :fill="cellOn(i, si) ? 'rgba(180,140,255,0.42)' : 'rgba(var(--tint),0.06)'"
+            :stroke="cellOn(i, si) ? '#b48cff' : 'rgba(var(--tint),0.14)'" stroke-width="1.2" />
           <text v-if="pipeOn || si === 0" :x="146 + si * 62" :y="63 + i * 30" text-anchor="middle" class="lbl" font-size="8.5"
             :fill="cellOn(i, si) ? '#f0e6ff' : '#4a5568'">{{ st }}</text>
         </g>
@@ -349,7 +378,7 @@ const status = computed(() => {
       </g>
       <text x="20" y="192" class="lbl" font-size="9.5">{{ pipeOn ? '流水线开：4 条指令 8 拍走完' : '流水线关：4 条指令 20 拍' }}</text>
       <g transform="translate(356,150)">
-        <rect x="0" y="0" width="88" height="42" rx="6" fill="rgba(6,12,28,0.85)" stroke="rgba(120,190,255,0.18)" />
+        <rect x="0" y="0" width="88" height="42" rx="6" fill="rgba(var(--veil),0.85)" stroke="rgba(var(--tint),0.18)" />
         <text x="10" y="16" class="lbl" font-size="8.5">加速比</text>
         <text x="78" y="32" text-anchor="end" class="val" font-size="15" fill="#34d399">{{ pipeOn ? '2.5×' : '1.0×' }}</text>
       </g>

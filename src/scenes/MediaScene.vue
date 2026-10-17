@@ -113,7 +113,7 @@ function stop() { settings.stopMusic(); ui.toast('音乐已停止', 'info', '�
 .ms__search {
   margin-left: auto; width: min(320px, 100%);
   padding: 8px 14px; font-size: 13px; color: var(--t-hi);
-  background: rgba(5, 10, 30, 0.7); border: 1px solid var(--line); border-radius: 999px; outline: none;
+  background: rgba(var(--veil), 0.7); border: 1px solid var(--line); border-radius: 999px; outline: none;
   transition: border-color var(--dur-fast);
 }
 .ms__search:focus { border-color: var(--line-hot); }

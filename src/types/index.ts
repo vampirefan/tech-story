@@ -148,4 +148,5 @@ export interface Settings {
   quality: 'low' | 'medium' | 'high'
   bloom: boolean
   borderDensity: 'era' | 'full'
+  theme: 'dark' | 'light'
 }

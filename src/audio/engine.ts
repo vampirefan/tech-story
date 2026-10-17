@@ -23,6 +23,8 @@ interface EraScore {
   melody: number        // 每小节出现旋律动机的概率
   drone: boolean
   droneGain: number
+  /** warm=低锯齿铺底；air=风噪床（石器时代用，避免低沉轰鸣） */
+  droneKind?: 'warm' | 'air'
   perc: number          // 打击密度 0-1（整体克制）
   reverb: number        // 混响湿声 0-1
   lowpass: number
@@ -45,7 +47,7 @@ const DIAT_MAJ = [0, 2, 4, 5, 7, 9, 11]
  * 走文明 / P 社原声那种"慢、暖、可哼唱"的路子，避免随机音阶与不协和音色
  */
 const ERA_SCORES: Record<string, EraScore> = {
-  stone:        { root: 65.4, scale: PENT_MIN,   tempo: 3.0, barsPerChord: 2, progression: [0, 3, 2, 1], timbre: 'flute',  melody: 0.55, drone: true, droneGain: 0.13, perc: 0.10, reverb: 0.80, lowpass: 1000 },
+  stone:        { root: 65.4, scale: PENT_MIN,   tempo: 3.0, barsPerChord: 2, progression: [0, 3, 2, 1], timbre: 'flute',  melody: 0.55, drone: true, droneGain: 0.10, droneKind: 'air', perc: 0.10, reverb: 0.80, lowpass: 1000 },
   bronze:       { root: 58.3, scale: CHINA_PENT, tempo: 2.4, barsPerChord: 2, progression: [0, 3, 4, 2], timbre: 'bell',   melody: 0.62, drone: true, droneGain: 0.11, perc: 0.12, reverb: 0.70, lowpass: 2600 },
   iron:         { root: 65.4, scale: DORIAN,     tempo: 2.2, barsPerChord: 2, progression: [0, 5, 3, 4], timbre: 'string', melody: 0.60, drone: true, droneGain: 0.12, perc: 0.16, reverb: 0.62, lowpass: 2200 },
   classical:    { root: 73.4, scale: DIAT_MAJ,   tempo: 2.6, barsPerChord: 2, progression: [0, 5, 3, 4], timbre: 'string', melody: 0.70, drone: true, droneGain: 0.12, perc: 0.00, reverb: 0.72, lowpass: 2400 },
@@ -326,11 +328,57 @@ class AudioEngine {
     const t = this.now()
     const g = ctx.createGain(); g.gain.setValueAtTime(0, t)
     g.gain.linearRampToValueAtTime(score.droneGain, t + 3.5)
+    const oscs: OscillatorNode[] = []
+    const extraStops: (() => void)[] = []
+
+    if ((score.droneKind ?? 'warm') === 'air') {
+      // 风床：循环噪声过两带缓摆带通 + 高八度协和正弦，取代低锯齿轰鸣
+      const len = ctx.sampleRate * 2
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate)
+      const d = buf.getChannelData(0)
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1
+      const wind = (freq: number, q: number, amp: number, lfoF: number) => {
+        const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true
+        const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = freq; bp.Q.value = q
+        const ng = ctx.createGain(); ng.gain.value = amp
+        const lfo = ctx.createOscillator(); lfo.frequency.value = lfoF
+        const lg = ctx.createGain(); lg.gain.value = amp * 0.45
+        lfo.connect(lg); lg.connect(ng.gain); lfo.start(t)
+        const wl = ctx.createOscillator(); wl.frequency.value = lfoF * 0.63
+        const wg = ctx.createGain(); wg.gain.value = freq * 0.22
+        wl.connect(wg); wg.connect(bp.frequency); wl.start(t)
+        src.connect(bp); bp.connect(ng); ng.connect(g)
+        src.start(t)
+        oscs.push(lfo as unknown as OscillatorNode, wl as unknown as OscillatorNode)
+        extraStops.push(() => { try { src.stop(this.now() + 1.1) } catch { /* noop */ } })
+      }
+      wind(420, 0.8, 0.5, 0.045)
+      wind(1150, 1.2, 0.22, 0.061)
+      ;[2, 3].forEach((mult, i) => {
+        const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = score.root * mult
+        const og = ctx.createGain(); og.gain.value = i ? 0.10 : 0.16
+        const lfo = ctx.createOscillator(); lfo.frequency.value = 0.05 + i * 0.02
+        const lg = ctx.createGain(); lg.gain.value = (i ? 0.10 : 0.16) * 0.4
+        lfo.connect(lg); lg.connect(og.gain); lfo.start(t)
+        o.connect(og); og.connect(g)
+        o.start(t); oscs.push(o, lfo as unknown as OscillatorNode)
+      })
+      this.route(g, score.reverb, this.ambGain)
+      g.connect(this.ambGain)
+      this.ambNodes.push({
+        stop: () => {
+          ramp(g.gain, 0, 0.9)
+          oscs.forEach(o => { try { o.stop(this.now() + 1.1) } catch { /* noop */ } })
+          extraStops.forEach(fn => fn())
+        }
+      })
+      return
+    }
+
     const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = Math.min(1400, score.lowpass); f.Q.value = 0.7
 
     const freqs = [score.root, score.root * 1.5, score.root * 2, score.root * 3.01]
     const amps = [1, 0.5, 0.32, 0.12]
-    const oscs: OscillatorNode[] = []
     freqs.forEach((fr, i) => {
       const o = ctx.createOscillator()
       o.type = i < 2 ? 'sawtooth' : 'sine'

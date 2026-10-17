@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, clamp } from './useDemo'
+import { useDemoTouch, useRaf, clamp, useAutoDemo, seg, lerp, smooth } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -50,6 +50,17 @@ useRaf((dt) => {
   if (steamPuffs.value.length > 40) steamPuffs.value.splice(0, steamPuffs.value.length - 40)
 })
 
+/* 自动演示：升火 → 加载 → 拆冷凝器对比 → 拆调速器对比 */
+useAutoDemo((t) => {
+  const s = seg(t, 8, 8, 6, 6)
+  condenser.value = true
+  governor.value = true
+  if (s.i === 0) { fire.value = lerp(0.1, 1, smooth(s.p)); load.value = 0.35 }
+  else if (s.i === 1) { fire.value = 1; load.value = lerp(0.15, 0.85, smooth(s.p)) }
+  else if (s.i === 2) { fire.value = 0.85; load.value = 0.5; condenser.value = s.p >= 0.5 }
+  else { fire.value = 1; load.value = 0.5; governor.value = s.p >= 0.5 }
+}, 28)
+
 const status = computed(() => {
   if (pressure.value < 0.4) return { text: '锅炉压力不足，蒸汽还推不动活塞。把火力调大一些。' }
   if (omega.value < 0.4) return { text: `压力 ${pressure.value.toFixed(1)} bar 已足够，但负载太重（${Math.round(load.value * 100)}%），转速上不来。` , kind: 'warn' as const }
@@ -76,8 +87,8 @@ const status = computed(() => {
           <stop offset="1" stop-color="#ff5f56" stop-opacity="0" />
         </radialGradient>
       </defs>
-      <rect width="460" height="230" fill="#060c1c" />
-      <rect x="0" y="204" width="460" height="26" fill="#12101f" />
+      <rect width="460" height="230" class="stage-bg" />
+      <rect x="0" y="204" width="460" height="26" class="stage-ground" />
       <line x1="0" y1="204" x2="460" y2="204" stroke="#3a2b46" stroke-width="1.4" />
 
       <!-- 炉火 -->
@@ -98,7 +109,7 @@ const status = computed(() => {
       <!-- 压力表 -->
       <g transform="translate(83,60)">
         <circle r="17" fill="#0a1220" stroke="url(#stBrass)" stroke-width="2.4" />
-        <path d="M-12,6 A13,13 0 0 1 12,6" fill="none" stroke="rgba(120,190,255,0.22)" stroke-width="2.6" />
+        <path d="M-12,6 A13,13 0 0 1 12,6" fill="none" stroke="rgba(var(--tint),0.22)" stroke-width="2.6" />
         <path d="M-12,6 A13,13 0 0 1 12,6" fill="none" :stroke="pressure > 6 ? '#ff5f56' : '#34d399'" stroke-width="2.6"
           :stroke-dasharray="`${clamp(pressure / 8, 0, 1) * 34} 40`" />
         <line x1="0" y1="0" :x2="Math.cos(Math.PI * 0.8 + clamp(pressure / 8, 0, 1) * Math.PI * 1.4) * 12"
@@ -119,7 +130,7 @@ const status = computed(() => {
       <rect x="192" y="112" width="86" height="40" rx="5" fill="#39414f" stroke="#171b23" stroke-width="1.6" />
       <rect x="196" y="116" width="78" height="32" rx="3" fill="#1b212b" />
       <rect x="196" y="116" :width="clamp(pistonX - 196, 0, 78)" height="32" rx="3"
-        :fill="pressure > 0.4 ? `rgba(255,179,71,${0.18 + clamp(pressure / 8, 0, 1) * 0.4})` : 'rgba(120,190,255,0.08)'" />
+        :fill="pressure > 0.4 ? `rgba(255,179,71,${0.18 + clamp(pressure / 8, 0, 1) * 0.4})` : 'rgba(var(--tint),0.08)'" />
       <rect :x="pistonX - 4" y="114" width="9" height="36" rx="2" fill="url(#stBrass)" stroke="#2b2108" />
       <rect :x="pistonX + 4" y="128" width="26" height="7" rx="2" fill="#8a94a5" />
       <text x="235" y="108" text-anchor="middle" class="lbl">汽缸 · 活塞</text>
@@ -167,7 +178,7 @@ const status = computed(() => {
       <!-- 效率条 -->
       <g transform="translate(286,200)">
         <text class="lbl" font-size="9" x="0" y="-4">热效率</text>
-        <rect x="52" y="-12" width="104" height="8" rx="4" fill="rgba(120,190,255,0.12)" />
+        <rect x="52" y="-12" width="104" height="8" rx="4" fill="rgba(var(--tint),0.12)" />
         <rect x="52" y="-12" :width="eff * 104" height="8" rx="4" :fill="condenser ? '#34d399' : '#fb7185'" />
         <text class="val" font-size="10" x="160" y="-4">{{ (eff * 100).toFixed(0) }}%</text>
       </g>

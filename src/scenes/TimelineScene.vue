@@ -256,7 +256,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.tl { background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(20, 60, 120, 0.25), transparent 65%), var(--c-deep); }
+.tl { background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(var(--veil), 0.25), transparent 65%), var(--c-deep); }
 .tl__scroll { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
 .tl__scroll > * { width: min(1180px, 100%); margin: 0 auto; }
 
@@ -271,22 +271,22 @@ onBeforeUnmount(() => {
   position: sticky; top: 0; z-index: 20;
   display: flex; gap: 6px; overflow-x: auto;
   padding: 10px var(--s-6);
-  background: linear-gradient(180deg, rgba(3, 6, 15, 0.97), rgba(3, 6, 15, 0.92));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.97), rgba(var(--veil), 0.92));
   border-block: 1px solid var(--line);
   width: 100% !important; margin: 0 !important;
 }
 .tl__nav-pill {
   flex: none; display: inline-flex; align-items: center; gap: 6px;
   padding: 5px 12px; border-radius: 16px;
-  border: 1px solid var(--line); background: rgba(8, 15, 34, 0.7);
+  border: 1px solid var(--line); background: rgba(var(--veil), 0.7);
   color: var(--t-mid); font-size: 12px; font-weight: 600;
   transition: all var(--dur-fast) var(--ease-out);
 }
-.tl__nav-pill i { font-family: var(--f-mono); font-style: normal; font-size: 10px; color: var(--t-faint); }
+.tl__nav-pill i { font-family: var(--f-mono); font-style: normal; font-size: 11px; color: var(--t-faint); }
 .tl__nav-pill:hover { color: var(--t-hi); border-color: var(--ec); }
 .tl__nav-pill.is-active {
   color: var(--t-hi); border-color: var(--ec);
-  background: color-mix(in srgb, var(--ec) 16%, rgba(8, 15, 34, 0.8));
+  background: color-mix(in srgb, var(--ec) 16%, rgba(var(--veil), 0.8));
   box-shadow: 0 0 14px color-mix(in srgb, var(--ec) 35%, transparent);
 }
 .tl__nav-pill.is-active i { color: var(--ec); }
@@ -312,7 +312,7 @@ onBeforeUnmount(() => {
   display: flex; flex-direction: column; gap: 8px;
   padding: var(--s-4);
   border: 1px solid var(--line); border-radius: var(--r-md);
-  background: linear-gradient(180deg, rgba(8, 15, 34, 0.66), rgba(5, 10, 24, 0.8));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.66), rgba(var(--veil), 0.8));
 }
 .pw { display: grid; grid-template-columns: 190px 1fr 34px; gap: 10px; align-items: center; }
 .pw__name { font-size: 12.5px; font-weight: 700; color: var(--t-hi); }
@@ -333,7 +333,7 @@ onBeforeUnmount(() => {
   border: 1px solid color-mix(in srgb, var(--cat) 30%, var(--line));
   border-left: 3px solid var(--cat);
   border-radius: var(--r-md);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--cat) 8%, rgba(8, 15, 34, 0.82)), rgba(5, 10, 24, 0.9));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--cat) 8%, rgba(var(--veil), 0.82)), rgba(var(--veil), 0.9));
   display: flex; flex-direction: column; gap: 8px;
   transition: box-shadow var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
@@ -351,7 +351,7 @@ onBeforeUnmount(() => {
 .tlcard__impact { display: inline-flex; gap: 3px; }
 .tlcard__impact i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, 0.14); }
 .tlcard__impact i.on { background: var(--c-amber); box-shadow: 0 0 6px var(--c-amber-glow); }
-.tlcard__badge { font-size: 10.5px; padding: 2px 8px; border-radius: 10px; border: 1px solid; }
+.tlcard__badge { font-size: 11.5px; padding: 2px 8px; border-radius: 10px; border: 1px solid; }
 .tlcard__badge--war { color: var(--c-rose); border-color: color-mix(in srgb, var(--c-rose) 45%, transparent); background: color-mix(in srgb, var(--c-rose) 10%, transparent); }
 .tlcard__badge--cn { color: var(--c-amber); border-color: color-mix(in srgb, var(--c-amber) 45%, transparent); background: color-mix(in srgb, var(--c-amber) 10%, transparent); }
 .tlcard__badge--demo { color: var(--c-cyan); border-color: color-mix(in srgb, var(--c-cyan) 45%, transparent); background: color-mix(in srgb, var(--c-cyan) 10%, transparent); }

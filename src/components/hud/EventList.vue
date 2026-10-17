@@ -115,7 +115,7 @@ const nearby = computed<TechNode[]>(() =>
 .event-panel :deep(.hud-panel__body) { display: flex; flex-direction: column; min-height: 0; }
 .event-row__open {
   position: absolute; right: 7px; bottom: 6px; opacity: 0;
-  font-size: 10px; letter-spacing: 0.06em; padding: 1px 6px; cursor: pointer;
+  font-size: 11px; letter-spacing: 0.06em; padding: 1px 6px; cursor: pointer;
   color: var(--c-cyan); background: rgba(0, 212, 255, 0.12);
   border: 1px solid rgba(0, 212, 255, 0.34); border-radius: 3px;
   transition: opacity var(--dur-fast) var(--ease-out);

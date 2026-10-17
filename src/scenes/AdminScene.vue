@@ -409,7 +409,7 @@ const overrideCount = computed(() => Object.keys(content.nodes).length + Object.
 .ad__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
 .ad__input {
   width: 100%; padding: 8px 11px; font-size: 13px; color: var(--t-hi); font-family: inherit;
-  background: rgba(3, 6, 15, 0.65); border: 1px solid var(--line); border-radius: var(--r-sm); outline: none;
+  background: rgba(var(--veil), 0.65); border: 1px solid var(--line); border-radius: var(--r-sm); outline: none;
   transition: border-color var(--dur-fast);
 }
 .ad__input:focus { border-color: var(--line-hot); }

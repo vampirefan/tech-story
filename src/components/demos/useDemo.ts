@@ -1,12 +1,22 @@
-import { inject, onScopeDispose, type Ref } from 'vue'
+import { inject, provide, ref, onScopeDispose, type InjectionKey, type Ref } from 'vue'
 import { useProgress } from '@/stores/progress'
 import { useSettings } from '@/stores/settings'
 import type { SfxName } from '@/audio/engine'
 
-/** DemoFrame 向内部控件注入的"我动过了"回调 */
-export const DEMO_TOUCH = Symbol('demoTouch')
-
 export type DemoTouch = (sfx?: SfxName, gain?: number) => void
+
+export interface DemoAuto {
+  running: Ref<boolean>
+  start: () => void
+  stop: () => void
+  toggle: () => void
+}
+
+/** DemoFrame 向内部控件注入的"我动过了"回调 */
+export const DEMO_TOUCH: InjectionKey<DemoTouch> = Symbol('demoTouch')
+
+/** demo 组件向 DemoFrame 暴露的自动演示开关 */
+export const DEMO_AUTO: InjectionKey<DemoAuto> = Symbol('demoAuto')
 
 export function useDemoTouch(): DemoTouch {
   return inject(DEMO_TOUCH, () => {})
@@ -22,6 +32,57 @@ export function useDemoReporter(demoId: string): DemoTouch {
     if (reported) return
     reported = true
     progress.playDemo(demoId)
+  }
+}
+
+/**
+ * 自动演示：按时间轴脚本推进，drive(t, dt) 里直接把 t 映射成各控件的值。
+ * drive 必须是 t 的纯函数（不累积状态），这样暂停/回卷都不会错位。
+ * t 走完 duration 回卷，课堂里可以一直循环放着看；用户碰控件时由 DemoFrame 停掉。
+ */
+export function useAutoDemo(drive: (t: number, dt: number) => void, duration = 24): DemoAuto {
+  const running = ref(false)
+  let t = 0
+  useRaf((dt) => {
+    t += dt
+    if (t >= duration) t -= duration
+    drive(t, dt)
+  }, running)
+
+  const api: DemoAuto = {
+    running,
+    start() { t = 0; running.value = true },
+    stop() { running.value = false },
+    toggle() { if (running.value) api.stop(); else api.start() },
+  }
+  provide(DEMO_AUTO, api)
+  return api
+}
+
+/** 时间轴分段：返回当前第几段与段内进度 0..1 */
+export function seg(t: number, ...durs: number[]): { i: number; p: number } {
+  for (let i = 0; i < durs.length; i++) {
+    if (t < durs[i] || i === durs.length - 1) return { i, p: durs[i] ? Math.min(1, t / durs[i]) : 1 }
+    t -= durs[i]
+  }
+  return { i: durs.length - 1, p: 1 }
+}
+
+/** smoothstep，用来让脚本扫动不像机械线性 */
+export function smooth(p: number): number {
+  return p * p * (3 - 2 * p)
+}
+
+/** 时间轴上的到点触发：t 越过 at 的那一帧返回 true，脚本回卷后自动重新武装 */
+export function edgeTrigger(): (t: number, at: number) => boolean {
+  let prev = 0
+  const done = new Set<number>()
+  return (t, at) => {
+    if (t < prev) done.clear()
+    prev = t
+    if (t < at || done.has(at)) return false
+    done.add(at)
+    return true
   }
 }
 

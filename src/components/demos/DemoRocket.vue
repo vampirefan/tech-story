@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, clamp } from './useDemo'
+import { useDemoTouch, useRaf, clamp, useAutoDemo, seg, lerp, smooth, edgeTrigger } from './useDemo'
 
 const props = defineProps<{ demoId: string; title: string; hint?: string; points?: string[]; nodeId?: string }>()
 const touch = useDemoTouch()
@@ -85,6 +85,41 @@ function launch() {
 }
 function reset() { phase.value = 'idle'; alt.value = 0; vel.value = 0; trail.value = []; dropped.value = []; touch('cancel') }
 
+/* 自动演示：按当前模式各演一遍（发射调参 / 登月方案 / 火星窗口与着陆） */
+const hit = edgeTrigger()
+useAutoDemo((t) => {
+  if (mode.value === 'mission') {
+    const s = seg(t, 12, 11, 11)
+    plan.value = s.i === 0 ? 'direct' : s.i === 1 ? 'eor' : 'lor'
+    return
+  }
+  if (mode.value === 'mars') {
+    const s = seg(t, 9, 5, 5, 5, 5, 5)
+    if (s.i === 0) { phaseAngle.value = Math.round(lerp(140, 44, smooth(s.p))); edl.value = -1 }
+    else edl.value = Math.min(s.i - 1, EDL.length - 1)
+    return
+  }
+  const s = seg(t, 8, 6, 6, 6, 8)
+  const fire = (at: number) => { if (!hit(t, at)) return; if (phase.value === 'fly') reset(); launch() }
+  if (s.i === 0) {
+    thrust.value = Math.round(lerp(3000, 8000, smooth(s.p)) / 100) * 100
+    fuelRatio.value = 0.88; stages.value = 1; isp.value = 300
+    fire(3)
+  } else if (s.i === 1) {
+    thrust.value = 8000; stages.value = s.p < 0.5 ? 1 : 3
+    fire(11)
+  } else if (s.i === 2) {
+    stages.value = 2; isp.value = Math.round(lerp(240, 450, smooth(s.p)) / 5) * 5
+    fire(17)
+  } else if (s.i === 3) {
+    isp.value = 350; fuelRatio.value = lerp(0.7, 0.93, smooth(s.p))
+    fire(23)
+  } else {
+    thrust.value = 12000; fuelRatio.value = 0.9; stages.value = 3; isp.value = 420
+    fire(28.5)
+  }
+}, 34)
+
 /* ══════ 登月方案 ══════ */
 const PLANS = [
   { k: 'direct', n: '直接登月', en: 'Direct Ascent', mass: 8000, dv: 15.2, risk: '极高', note: '一枚巨型火箭整艘飞船直冲月球再返回。需要造出比土星五号还大一倍的火箭（ Nova ），当时根本造不出来。', ok: false },
@@ -158,9 +193,9 @@ const rocketY = computed(() => clamp(186 - (alt.value / 120000) * 150, 26, 186))
 
       <!-- 高度标尺 -->
       <g>
-        <line x1="414" y1="20" x2="414" y2="200" stroke="rgba(120,190,255,0.28)" />
+        <line x1="414" y1="20" x2="414" y2="200" stroke="rgba(var(--tint),0.28)" />
         <g v-for="h in [0, 30, 60, 90, 120]" :key="h">
-          <line x1="408" :y1="200 - h / 120 * 180" x2="420" :y2="200 - h / 120 * 180" stroke="rgba(120,190,255,0.3)" />
+          <line x1="408" :y1="200 - h / 120 * 180" x2="420" :y2="200 - h / 120 * 180" stroke="rgba(var(--tint),0.3)" />
           <text x="404" :y="203 - h / 120 * 180" text-anchor="end" class="lbl" font-size="8.5">{{ h }}km</text>
         </g>
         <line x1="402" y1="50" x2="426" y2="50" stroke="#34d399" stroke-width="1.4" stroke-dasharray="3 2" />
@@ -208,12 +243,12 @@ const rocketY = computed(() => clamp(186 - (alt.value / 120000) * 150, 26, 186))
 
       <!-- 读数 -->
       <g transform="translate(20,20)">
-        <rect x="-8" y="-14" width="150" height="86" rx="6" fill="rgba(6,12,28,0.82)" stroke="rgba(120,190,255,0.18)" />
+        <rect x="-8" y="-14" width="150" height="86" rx="6" fill="rgba(var(--veil),0.82)" stroke="rgba(var(--tint),0.18)" />
         <text class="lbl" font-size="9">高度</text><text class="val" x="134" text-anchor="end" font-size="11">{{ (alt / 1000).toFixed(1) }} km</text>
         <text class="lbl" font-size="9" y="20">速度</text><text class="val" x="134" y="20" text-anchor="end" font-size="11" :fill="vel >= 7900 ? '#34d399' : undefined">{{ (vel / 1000).toFixed(2) }} km/s</text>
         <text class="lbl" font-size="9" y="40">质量</text><text class="val" x="134" y="40" text-anchor="end" font-size="11">{{ (mass / 1000).toFixed(0) }} t</text>
         <text class="lbl" font-size="9" y="60">Δv 预算</text><text class="val" x="134" y="60" text-anchor="end" font-size="11">{{ (dvTotal / 1000).toFixed(2) }} km/s</text>
-        <rect x="0" y="66" width="134" height="5" rx="2.5" fill="rgba(120,190,255,0.12)" />
+        <rect x="0" y="66" width="134" height="5" rx="2.5" fill="rgba(var(--tint),0.12)" />
         <rect x="0" y="66" :width="clamp(mass / m0, 0, 1) * 134" height="5" rx="2.5" fill="#ffb347" />
       </g>
       <g v-if="phase === 'orbit'" transform="translate(230,120)">
@@ -226,7 +261,7 @@ const rocketY = computed(() => clamp(186 - (alt.value / 120000) * 150, 26, 186))
 
     <!-- ══ 登月方案 ══ -->
     <svg v-else-if="mode === 'mission'" viewBox="0 0 460 224">
-      <rect width="460" height="224" fill="#060c1c" />
+      <rect width="460" height="224" class="stage-bg" />
       <g v-for="i in 40" :key="i">
         <circle :cx="(i * 89) % 460" :cy="(i * 61) % 224" :r="i % 4 === 0 ? 1.3 : 0.8" fill="#cfe6ff" :opacity="0.25 + (i % 5) * 0.1" />
       </g>
@@ -268,9 +303,9 @@ const rocketY = computed(() => clamp(186 - (alt.value / 120000) * 150, 26, 186))
         <text class="lbl" font-size="9">起飞质量（吨）· 三方案对比</text>
         <g v-for="(p, i) in PLANS" :key="p.k" style="cursor:pointer" @click="plan = p.k">
           <text :class="p.k === plan ? 'lbl-hi' : 'lbl'" font-size="9" :y="18 + i * 17">{{ p.n }}</text>
-          <rect x="64" :y="10 + i * 17" width="140" height="8" rx="3" fill="rgba(120,190,255,0.1)" />
+          <rect x="64" :y="10 + i * 17" width="140" height="8" rx="3" fill="rgba(var(--tint),0.1)" />
           <rect x="64" :y="10 + i * 17" :width="p.mass / 8000 * 140" height="8" rx="3"
-            :fill="p.k === plan ? (p.ok ? '#34d399' : '#ffb347') : 'rgba(120,190,255,0.28)'" />
+            :fill="p.k === plan ? (p.ok ? '#34d399' : '#ffb347') : 'rgba(var(--tint),0.28)'" />
           <text class="val" font-size="9.5" x="210" :y="18 + i * 17">{{ p.mass }}t · Δv {{ p.dv }} · 风险{{ p.risk }}</text>
         </g>
         <text class="lbl" font-size="8.5" y="76">点任意一行或下方按钮切换方案；绿色为 1962 年最终采纳的方案</text>
@@ -279,7 +314,7 @@ const rocketY = computed(() => clamp(186 - (alt.value / 120000) * 150, 26, 186))
 
     <!-- ══ 火星 ══ -->
     <svg v-else viewBox="0 0 460 224">
-      <rect width="460" height="224" fill="#060c1c" />
+      <rect width="460" height="224" class="stage-bg" />
       <g v-for="i in 46" :key="i">
         <circle :cx="(i * 83) % 460" :cy="(i * 47) % 224" :r="i % 4 === 0 ? 1.3 : 0.7" fill="#cfe6ff" :opacity="0.25 + (i % 5) * 0.1" />
       </g>
@@ -311,8 +346,8 @@ const rocketY = computed(() => clamp(186 - (alt.value / 120000) * 150, 26, 186))
         <text class="lbl" font-size="9">恐怖七分钟：按顺序点选减速步骤</text>
         <g v-for="(s, i) in EDL" :key="s.n" :transform="`translate(${i * 84},14)`" style="cursor:pointer" @click="edlGo(i)">
           <rect width="76" height="46" rx="5"
-            :fill="edl >= i ? 'rgba(52,211,153,0.14)' : 'rgba(120,190,255,0.05)'"
-            :stroke="edl === i ? '#34d399' : 'rgba(120,190,255,0.18)'" stroke-width="1.2" />
+            :fill="edl >= i ? 'rgba(52,211,153,0.14)' : 'rgba(var(--tint),0.05)'"
+            :stroke="edl === i ? '#34d399' : 'rgba(var(--tint),0.18)'" stroke-width="1.2" />
           <text x="8" y="15" class="lbl" font-size="8" :fill="edl >= i ? '#34d399' : '#64809f'">STEP {{ i + 1 }}</text>
           <text x="8" y="29" class="lbl-hi" font-size="9.5">{{ s.n }}</text>
           <text x="8" y="41" class="val" font-size="8.5">→ {{ s.v }} m/s</text>

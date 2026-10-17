@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, provide } from 'vue'
-import { DEMO_TOUCH, useDemoReporter } from './useDemo'
+import { computed, inject, provide } from 'vue'
+import { DEMO_AUTO, DEMO_TOUCH, useDemoReporter } from './useDemo'
 
 const props = withDefaults(defineProps<{
   demoId: string
@@ -15,13 +15,32 @@ const props = withDefaults(defineProps<{
   note?: string
 }>(), { icon: '⚙', color: 'var(--c-cyan)', points: () => [] })
 
-provide(DEMO_TOUCH, useDemoReporter(props.demoId))
+const report = useDemoReporter(props.demoId)
+provide(DEMO_TOUCH, report)
+
+/** demo 组件调了 useAutoDemo 才有自动演示按钮 */
+const auto = inject(DEMO_AUTO, null)
+const autoOn = computed(() => auto?.running.value ?? false)
+
+/** 用户自己动手就把控制权还给他，别让脚本跟人抢滑块 */
+function onManual(e: Event) {
+  if (!auto?.running.value) return
+  if ((e.target as HTMLElement)?.closest?.('.demo-auto')) return
+  auto.stop()
+  report('cancel', 0.2)
+}
+
+function toggleAuto() {
+  if (!auto) return
+  auto.toggle()
+  report(auto.running.value ? 'confirm' : 'cancel', 0.3)
+}
 
 const statusKind = computed(() => props.status?.kind ?? 'info')
 </script>
 
 <template>
-  <section class="demo-frame" :style="{ '--dc': color }">
+  <section class="demo-frame" :style="{ '--dc': color }" @pointerdown.capture="onManual" @input.capture="onManual">
     <header class="demo-frame__head">
       <span class="demo-frame__icon">{{ icon }}</span>
       <div class="demo-frame__titles">
@@ -31,7 +50,12 @@ const statusKind = computed(() => props.status?.kind ?? 'info')
         </div>
         <div v-if="hint" class="demo-frame__hint">{{ hint }}</div>
       </div>
-      <slot name="head-right" />
+      <div class="demo-frame__aside">
+        <button v-if="auto" class="demo-btn demo-auto" :class="{ 'demo-btn--on': autoOn }" @click="toggleAuto">
+          <span class="demo-auto__ico" />{{ autoOn ? '停止演示' : '自动演示' }}
+        </button>
+        <slot name="head-right" />
+      </div>
     </header>
 
     <div class="demo-stage">

@@ -51,7 +51,7 @@
   padding: 8px 16px;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-sm);
-  background: linear-gradient(180deg, rgba(30, 58, 110, 0.55), rgba(10, 22, 50, 0.7));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.55), rgba(var(--veil), 0.7));
   color: var(--t-hi);
   font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
   transition: all var(--dur-fast) var(--ease-out);
@@ -66,7 +66,7 @@
 }
 .btn:hover {
   border-color: var(--line-hot);
-  background: linear-gradient(180deg, rgba(40, 78, 145, 0.7), rgba(14, 30, 66, 0.8));
+  background: linear-gradient(180deg, rgba(40, 78, 145, 0.7), rgba(var(--veil), 0.8));
   box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.18), var(--glow-cyan);
   transform: translateY(-1px);
 }
@@ -111,7 +111,7 @@
 /* ─── 分段控件 ─── */
 .segmented {
   display: inline-flex; padding: 3px;
-  background: rgba(4, 10, 26, 0.7);
+  background: rgba(var(--veil), 0.7);
   border: 1px solid var(--line);
   border-radius: var(--r-sm);
   gap: 2px;
@@ -131,7 +131,7 @@
 .switch { display: inline-flex; align-items: center; gap: 9px; cursor: pointer; }
 .switch__track {
   position: relative; width: 40px; height: 21px; border-radius: 11px;
-  background: rgba(6, 14, 34, 0.9);
+  background: rgba(var(--veil), 0.9);
   border: 1px solid var(--line);
   transition: all var(--dur) var(--ease-out);
   flex: none;
@@ -188,7 +188,7 @@
   padding: 2.5px 9px; border-radius: 20px;
   font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
   border: 1px solid var(--line);
-  background: rgba(8, 18, 42, 0.7);
+  background: rgba(var(--veil), 0.7);
   color: var(--t-mid);
   white-space: nowrap;
 }
@@ -204,7 +204,7 @@
 
 /* ─── 数据行 ─── */
 .stat { display: flex; flex-direction: column; gap: 2px; }
-.stat__k { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--t-lo); font-weight: 600; }
+.stat__k { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--t-lo); font-weight: 600; }
 .stat__v { font-family: var(--f-mono); font-size: 17px; font-weight: 700; color: var(--t-hi); letter-spacing: 0.02em; }
 .stat__v--cyan { color: var(--c-cyan); text-shadow: 0 0 12px var(--c-cyan-glow); }
 .stat__v--amber { color: var(--c-amber); text-shadow: 0 0 12px var(--c-amber-glow); }
@@ -222,7 +222,7 @@
   padding: var(--s-4);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  background: linear-gradient(155deg, rgba(14, 28, 60, 0.72), rgba(6, 12, 30, 0.82));
+  background: linear-gradient(155deg, rgba(var(--veil), 0.72), rgba(var(--veil), 0.82));
   transition: all var(--dur) var(--ease-out);
 }
 .card:hover {
@@ -248,7 +248,7 @@
 .toast {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 20px; border-radius: 30px;
-  background: linear-gradient(180deg, rgba(18, 38, 78, 0.95), rgba(8, 18, 42, 0.95));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.95), rgba(var(--veil), 0.95));
   border: 1px solid var(--line-hot);
   box-shadow: 0 12px 34px rgba(0,0,0,0.5), var(--glow-cyan);
   font-size: 13.5px; font-weight: 600;
@@ -275,7 +275,7 @@
   border-radius: 5px;
   border: 1px solid var(--line-strong);
   border-bottom-width: 2px;
-  background: linear-gradient(180deg, rgba(30, 55, 100, 0.7), rgba(10, 20, 44, 0.8));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.7), rgba(var(--veil), 0.8));
   font-family: var(--f-mono); font-size: 11px; font-weight: 700; color: var(--t-mid);
 }
 

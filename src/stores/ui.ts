@@ -62,7 +62,6 @@ export const useUI = defineStore('ui', {
     showSearch: false,
 
     /** 资源加载 */
-    assetsReady: false,
     loadingText: '正在生成地球…',
     loadProgress: 0,
 
@@ -202,11 +201,6 @@ export const useUI = defineStore('ui', {
     toggleLegend() { this.showLegend = !this.showLegend },
     toggleSearch(v?: boolean) { this.showSearch = v ?? !this.showSearch },
 
-    setAssetsReady(text = '') {
-      this.assetsReady = true
-      this.loadProgress = 1
-      if (text) this.loadingText = text
-    },
     setLoadProgress(p: number, text?: string) {
       this.loadProgress = p
       if (text) this.loadingText = text

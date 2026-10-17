@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, clamp, fillStyle } from './useDemo'
+import { useDemoTouch, useRaf, clamp, fillStyle, useAutoDemo, seg, lerp, smooth } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -36,6 +36,19 @@ useRaf((dt) => {
   wheelAng.value = (wheelAng.value + (v.value * dt * 9) / radius.value * 57.3) % 360
 })
 
+/* 自动演示：拖不动 → 装上轮子 → 换大轮 → 上油走平路 → 加重 */
+useAutoDemo((t) => {
+  const s = seg(t, 6, 4, 6, 6, 4)
+  hasWheel.value = s.i > 0
+  if (s.i === 0) {
+    pull.value = lerp(500, 1500, smooth(s.p)); mass.value = 600
+    radius.value = 0.35; rough.value = 0.6; lube.value = 0.5
+  } else if (s.i === 1) { pull.value = 1200 }
+  else if (s.i === 2) { radius.value = lerp(0.15, 0.6, smooth(s.p)) }
+  else if (s.i === 3) { radius.value = 0.35; lube.value = lerp(0, 1, smooth(s.p)); rough.value = lerp(0.9, 0.15, s.p) }
+  else { lube.value = 0.5; rough.value = 0.6; mass.value = lerp(300, 1500, smooth(s.p)) }
+}, 26)
+
 const barMax = computed(() => Math.max(fSlide.value, 1))
 const status = computed(() => {
   if (!hasWheel.value) return { text: `滑动摩擦需要约 ${Math.round(fSlide.value)} 牛（≈${people.value} 个成年人一起拉）。地面越粗糙、东西越重，越拉不动。` }
@@ -61,9 +74,9 @@ const status = computed(() => {
         </pattern>
       </defs>
 
-      <rect width="460" height="250" fill="#060c1c" />
+      <rect width="460" height="250" class="stage-bg" />
       <!-- 远景 -->
-      <path d="M0,150 L60,110 L120,148 L190,96 L260,150 L330,116 L400,150 L460,124 L460,200 L0,200 Z" fill="#0c1428" opacity="0.9" />
+      <path d="M0,150 L60,110 L120,148 L190,96 L260,150 L330,116 L400,150 L460,124 L460,200 L0,200 Z" class="stage-ground" opacity="0.9" />
       <circle cx="392" cy="52" r="17" fill="#ffd166" opacity="0.22" />
       <circle cx="392" cy="52" r="9" fill="#ffd166" opacity="0.5" />
 
@@ -129,11 +142,11 @@ const status = computed(() => {
       <g transform="translate(14,26)">
         <text class="lbl" x="0" y="0">需要的拉力对比</text>
         <text class="lbl" x="0" y="20">滑动</text>
-        <rect x="34" y="11" width="150" height="11" rx="3" fill="rgba(120,190,255,0.1)" />
+        <rect x="34" y="11" width="150" height="11" rx="3" fill="rgba(var(--tint),0.1)" />
         <rect x="34" y="11" :width="clamp(fSlide / barMax * 150, 2, 150)" height="11" rx="3" fill="#fb7185" opacity="0.85" />
         <text class="val" x="190" y="20" fill="#fb7185">{{ Math.round(fSlide) }}N</text>
         <text class="lbl" x="0" y="42">滚动</text>
-        <rect x="34" y="33" width="150" height="11" rx="3" fill="rgba(120,190,255,0.1)" />
+        <rect x="34" y="33" width="150" height="11" rx="3" fill="rgba(var(--tint),0.1)" />
         <rect x="34" y="33" :width="clamp(fRoll / barMax * 150, 2, 150)" height="11" rx="3" fill="#34d399" opacity="0.9" />
         <text class="val" x="190" y="42" fill="#34d399">{{ Math.round(fRoll) }}N</text>
         <text class="lbl" x="0" y="62" fill="#ffb347">当前方式需要 {{ people }} 个人一起拉（每人约 400N）</text>

@@ -146,7 +146,7 @@ onMounted(() => { settings.sfx('whoosh', 0.35) })
 .op__limb {
   position: absolute; left: 50%; bottom: -46vh; width: 150vw; height: 78vh; transform: translateX(-50%);
   border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 0%, rgba(20, 90, 150, 0.55), rgba(6, 20, 44, 0.9) 42%, #040a18 70%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(20, 90, 150, 0.55), rgba(var(--veil), 0.9) 42%, #040a18 70%);
   box-shadow: 0 -14px 60px rgba(0, 212, 255, 0.28), 0 -2px 0 rgba(120, 230, 255, 0.55), inset 0 6px 30px rgba(140, 240, 255, 0.35);
 }
 
@@ -169,15 +169,32 @@ onMounted(() => { settings.sfx('whoosh', 0.35) })
 .op__en { font-size: 12px; letter-spacing: 0.5em; color: var(--t-lo); }
 .op__tag { font-size: 15.5px; line-height: 2; color: var(--t-mid); }
 
+/* 亮色主题：星空开场换成"纸面天空"，避免白字白星消失 */
+[data-theme='light'] .op {
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 118%, rgba(2, 126, 164, 0.14), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 78% -10%, rgba(109, 79, 196, 0.08), transparent 60%),
+    var(--c-void);
+}
+[data-theme='light'] .op__stars { opacity: 0; }
+[data-theme='light'] .op__limb {
+  background: radial-gradient(ellipse at 50% 0%, rgba(2, 126, 164, 0.22), rgba(255, 255, 255, 0.85) 42%, #dbe6f2 70%);
+  box-shadow: 0 -14px 50px rgba(2, 126, 164, 0.16), 0 -2px 0 rgba(2, 126, 164, 0.3), inset 0 6px 30px rgba(255, 255, 255, 0.6);
+}
+[data-theme='light'] .op__title {
+  background-image: linear-gradient(180deg, #0d3a5f 8%, #027ea4 46%, #0e7490 78%, #12365c 100%);
+  filter: none;
+}
+
 .op__stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: var(--s-2); }
 .op__stat {
   display: flex; flex-direction: column; gap: 2px; min-width: 148px;
   padding: 10px 16px; border: 1px solid var(--line); border-radius: var(--r-md);
-  background: linear-gradient(180deg, rgba(10, 20, 48, 0.86), rgba(5, 10, 30, 0.78));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.86), rgba(var(--veil), 0.78));
 }
 .op__stat b { font-size: 26px; color: var(--c-cyan); text-shadow: 0 0 16px var(--c-cyan-glow); }
 .op__stat span { font-size: 12px; color: var(--t-hi); letter-spacing: 0.08em; }
-.op__stat i { font-style: normal; font-size: 10.5px; color: var(--t-lo); }
+.op__stat i { font-style: normal; font-size: 11.5px; color: var(--t-lo); }
 
 .op__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: var(--s-2); }
 .op__resume { font-size: 12px; color: var(--t-lo); }
@@ -192,20 +209,20 @@ onMounted(() => { settings.sfx('whoosh', 0.35) })
 .op__eras .label-xs { margin-right: 6px; }
 .op__era {
   padding: 5px 11px; font-size: 11.5px; letter-spacing: 0.1em; color: var(--t-mid);
-  border: 1px solid var(--line); border-radius: 999px; background: rgba(5, 10, 30, 0.6);
+  border: 1px solid var(--line); border-radius: 999px; background: rgba(var(--veil), 0.6);
   transition: all var(--dur-fast) var(--ease-out);
 }
 .op__era:hover { color: var(--ea); border-color: var(--ec); box-shadow: 0 0 14px color-mix(in srgb, var(--ec) 45%, transparent); transform: translateY(-2px); }
 
 .op__ticker {
   position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 34px; overflow: hidden;
-  border-top: 1px solid var(--line); background: rgba(3, 6, 15, 0.88);
+  border-top: 1px solid var(--line); background: rgba(var(--veil), 0.88);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
 }
 .op__ticker-track { display: flex; gap: 0; width: max-content; animation: opTick 46s linear infinite; }
 .op__ticker-track span { display: flex; align-items: center; gap: 18px; padding: 0 9px; font-size: 12px; letter-spacing: 0.28em; color: var(--t-lo); line-height: 34px; white-space: nowrap; }
-.op__ticker-track i { font-style: normal; font-size: 7px; color: var(--c-amber-dim); }
+.op__ticker-track i { font-style: normal; font-size: 10px; color: var(--c-amber-dim); }
 @keyframes opTick { to { transform: translateX(-50%); } }
 
 @media (max-width: 860px) {

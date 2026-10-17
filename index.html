@@ -3,18 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="dark light" />
     <meta name="description" content="一部可以玩的科技史：3D 地球 + 时间线 + 科技树，从石器时代讲到可控核聚变" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='35%25' cy='30%25'%3E%3Cstop offset='0' stop-color='%2300d4ff'/%3E%3Cstop offset='1' stop-color='%23062a52'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='28' fill='url(%23g)'/%3E%3Cpath d='M10 30h44M14 20h36M14 44h36M32 4c9 8 13 17 13 28s-4 20-13 28c-9-8-13-17-13-28S23 12 32 4z' fill='none' stroke='%23eafaff' stroke-opacity='.55' stroke-width='2'/%3E%3C/svg%3E" />
     <title>人类科技文明演进</title>
     <style>
       html, body { margin: 0; background: #03060f; }
+      html[data-theme='light'], html[data-theme='light'] body { background: #eef3fa; }
       #boot {
         position: fixed; inset: 0; display: grid; place-items: center;
         font-family: 'Orbitron', 'PingFang SC', system-ui, sans-serif;
         color: #00d4ff; letter-spacing: 0.3em; font-size: 12px; text-transform: uppercase;
       }
+      html[data-theme='light'] #boot { color: #0a7ea4; }
     </style>
+    <script>
+      // 首屏前恢复主题，避免浅色用户看到黑闪
+      try {
+        var s = JSON.parse(localStorage.getItem('techstory.settings.v2') || '{}')
+        if (s.theme === 'light') document.documentElement.dataset.theme = 'light'
+      } catch (e) { /* 忽略 */ }
+    </script>
   </head>
   <body>
     <div id="app"><div id="boot">Loading…</div></div>

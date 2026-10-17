@@ -15,7 +15,7 @@
 /* 极细扫描线，全息质感（低透明度，不干扰读图） */
 .globe-scan {
   position: absolute; inset: 0; pointer-events: none; z-index: 2; opacity: 0.16;
-  background: repeating-linear-gradient(0deg, rgba(120,200,255,0.10) 0px, rgba(120,200,255,0.10) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);
+  background: repeating-linear-gradient(0deg, rgba(var(--tint),0.10) 0px, rgba(var(--tint),0.10) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);
   mix-blend-mode: screen;
 }
 
@@ -47,7 +47,7 @@
 .gl__flag { font-size: 11px; line-height: 1; opacity: 0.92; }
 .gl__name { letter-spacing: 0.02em; }
 .gl__year {
-  font-family: var(--f-mono); font-size: 9.5px; color: var(--t-lo);
+  font-family: var(--f-mono); font-size: 11px; color: var(--t-lo);
   padding-left: 4px; border-left: 1px solid rgba(140,200,255,0.22); margin-left: 1px;
 }
 .globe-label.is-hot .gl__year { color: var(--c-cyan); border-left-color: rgba(0,212,255,0.35); }
@@ -82,6 +82,7 @@
   color: #fff; text-shadow: 0 0 20px var(--era-glow, rgba(0,212,255,0.55));
   white-space: nowrap;
 }
+[data-theme='light'] .era-panel__name { color: var(--t-hi); text-shadow: none; }
 .era-panel__range { font-family: var(--f-mono); font-size: 11px; color: var(--era-accent, var(--c-cyan)); letter-spacing: 0.04em; }
 .era-panel__tag { font-size: 12.5px; color: var(--t-mid); line-height: 1.6; margin-top: 3px; }
 .era-panel__desc { font-size: 12px; color: var(--t-lo); line-height: 1.72; margin-top: 7px; }
@@ -94,15 +95,17 @@
   transition: all var(--dur-fast) var(--ease-out);
 }
 .era-nav__btn:hover { color: #fff; background: rgba(0,212,255,0.16); border-color: var(--line-hot); }
+[data-theme='light'] .era-nav__btn:hover { color: var(--c-cyan); background: rgba(2,126,164,0.1); }
 .era-nav__btn:disabled { opacity: 0.3; pointer-events: none; }
 
 /* 地域对比条 */
 .region-list { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
 .region-row { display: grid; grid-template-columns: 1fr auto; gap: 3px 8px; align-items: center; cursor: pointer; }
 .region-row:hover .region-row__name { color: #fff; }
+[data-theme='light'] .region-row:hover .region-row__name { color: var(--c-cyan); }
 .region-row__name { font-size: 12px; color: var(--t-mid); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color var(--dur-fast); }
 .region-row__name b { color: var(--t-hi); font-weight: 600; }
-.region-row__v { font-family: var(--f-mono); font-size: 10.5px; color: var(--t-lo); }
+.region-row__v { font-family: var(--f-mono); font-size: 11.5px; color: var(--t-lo); }
 .region-row__bar { grid-column: 1 / -1; height: 4px; border-radius: 2px; background: rgba(90,140,190,0.16); overflow: hidden; }
 .region-row__fill {
   height: 100%; border-radius: 2px; transition: width var(--dur-slow) var(--ease-out);
@@ -114,7 +117,7 @@
 
 /* 图例 */
 .legend { display: flex; flex-wrap: wrap; gap: 4px 9px; }
-.legend__item { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; color: var(--t-lo); cursor: pointer; transition: color var(--dur-fast); }
+.legend__item { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--t-lo); cursor: pointer; transition: color var(--dur-fast); }
 .legend__item:hover { color: var(--t-hi); }
 .legend__swatch { width: 8px; height: 8px; border-radius: 2px; background: var(--cat); box-shadow: 0 0 7px var(--cat); }
 
@@ -138,10 +141,10 @@
   box-shadow: 0 0 12px color-mix(in srgb, var(--cat) 22%, transparent);
 }
 .event-row__t { font-size: 12.5px; color: var(--t-hi); line-height: 1.4; font-weight: 600; }
-.event-row__m { font-size: 10.5px; color: var(--t-lo); margin-top: 2px; line-height: 1.45; }
+.event-row__m { font-size: 11.5px; color: var(--t-lo); margin-top: 2px; line-height: 1.45; }
 .event-row__m .flag { margin-right: 3px; }
 .event-row__rec {
-  position: absolute; top: 6px; right: 7px; font-size: 9px; letter-spacing: 0.1em;
+  position: absolute; top: 6px; right: 7px; font-size: 10.5px; letter-spacing: 0.1em;
   color: var(--c-amber); border: 1px solid rgba(255,179,71,0.4); border-radius: 3px; padding: 0 4px;
   background: rgba(255,179,71,0.10);
 }
@@ -165,7 +168,7 @@
 .scrubber__era.is-now { border-color: var(--ec); box-shadow: 0 0 12px color-mix(in srgb, var(--ec) 55%, transparent); }
 .scrubber__era span {
   position: absolute; inset: 0; display: grid; place-items: center;
-  font-size: 8.5px; letter-spacing: 0.04em; color: rgba(234,244,255,0.72); white-space: nowrap; overflow: hidden;
+  font-size: 10px; letter-spacing: 0.04em; color: rgba(234,244,255,0.72); white-space: nowrap; overflow: hidden;
 }
 .scrubber__line { position: absolute; left: 0; right: 0; top: 32px; height: 3px; border-radius: 2px; background: rgba(90,140,190,0.20); }
 .scrubber__fill { position: absolute; left: 0; top: 32px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--c-cyan-dim), var(--c-cyan)); box-shadow: 0 0 10px var(--c-cyan-glow); }
@@ -185,7 +188,7 @@
 .scrubber__ctl { display: flex; align-items: center; gap: 5px; }
 .speed-seg { display: flex; gap: 2px; padding: 2px; border: 1px solid var(--line); border-radius: var(--r-xs); background: rgba(6,14,32,0.6); }
 .speed-seg button {
-  padding: 2px 6px; font-family: var(--f-mono); font-size: 10.5px; cursor: pointer;
+  padding: 2px 6px; font-family: var(--f-mono); font-size: 11.5px; cursor: pointer;
   color: var(--t-lo); background: transparent; border: 0; border-radius: 2px; transition: all var(--dur-fast);
 }
 .speed-seg button:hover { color: var(--t-hi); background: rgba(0,212,255,0.12); }
@@ -215,10 +218,10 @@
 @keyframes tipIn { from { opacity: 0; transform: translateY(5px) scale(0.97); } to { opacity: 1; transform: none; } }
 .gtip__h { display: flex; align-items: baseline; gap: 7px; }
 .gtip__t { font-size: 13.5px; font-weight: 700; color: #fff; letter-spacing: 0.02em; }
-.gtip__y { font-family: var(--f-mono); font-size: 10.5px; color: var(--cat, var(--c-cyan)); }
-.gtip__p { font-size: 10.5px; color: var(--t-lo); margin-top: 2px; }
+.gtip__y { font-family: var(--f-mono); font-size: 11.5px; color: var(--cat, var(--c-cyan)); }
+.gtip__p { font-size: 11.5px; color: var(--t-lo); margin-top: 2px; }
 .gtip__b { font-size: 11.5px; color: var(--t-mid); line-height: 1.6; margin-top: 5px; }
-.gtip__f { font-size: 10px; color: var(--t-faint); margin-top: 6px; letter-spacing: 0.06em; }
+.gtip__f { font-size: 11px; color: var(--t-faint); margin-top: 6px; letter-spacing: 0.06em; }
 .gtip__bar { height: 3px; border-radius: 2px; background: rgba(90,140,190,0.2); margin-top: 6px; overflow: hidden; }
 .gtip__barfill { height: 100%; background: linear-gradient(90deg, var(--c-cyan-dim), var(--c-amber)); }
 

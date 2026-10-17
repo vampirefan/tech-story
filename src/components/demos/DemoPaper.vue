@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, clamp } from './useDemo'
+import { useDemoTouch, useRaf, clamp, useAutoDemo, seg, lerp, smooth } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -35,6 +35,16 @@ function go(i: number) {
   }
 }
 function reset() { step.value = -1; touch('cancel') }
+
+/* 自动演示：五步依次走完，打浆 / 帘密 / 浓度同步调到能出好纸的区间 */
+useAutoDemo((t) => {
+  const s = seg(t, 2, 5, 5, 5, 5, 5, 3)
+  step.value = Math.min(s.i - 1, STEPS.length - 1)
+  const g = smooth(clamp((t - 2) / 22, 0, 1))
+  beat.value = lerp(0.42, 0.96, g)
+  mesh.value = lerp(0.42, 0.72, g)
+  water.value = lerp(0.72, 0.45, g)
+}, 30)
 
 /** 成品质量：打浆充分 + 帘密 + 浆浓度适中 */
 const quality = computed(() => {
@@ -79,8 +89,8 @@ const status = computed(() => {
           <stop offset="1" stop-color="#ff5f56" stop-opacity="0" />
         </radialGradient>
       </defs>
-      <rect width="460" height="210" fill="#060c1c" />
-      <rect x="0" y="176" width="460" height="34" fill="#12101f" />
+      <rect width="460" height="210" class="stage-bg" />
+      <rect x="0" y="176" width="460" height="34" class="stage-ground" />
       <line x1="0" y1="176" x2="460" y2="176" stroke="#3a2b46" stroke-width="1.4" />
 
       <!-- 起始：原料 -->

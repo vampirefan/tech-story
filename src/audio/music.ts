@@ -116,7 +116,12 @@ class MusicPlayer {
         this.current = howl
         this.currentId = id
         howl.play()
-        howl.fade(0, this.vol(), 2200)
+        // fade 必须等 play 的 promise 落地（_playLock 释放）后再调：
+        // 锁定期内调用会被 howler 排进内部队列且永不消费，音量会停在 0
+        howl.once('play', () => {
+          if (this.current !== howl) return
+          try { howl.fade(0, this.vol(), 2200) } catch { howl.volume(this.vol()) }
+        })
         if (old) {
           old.fade(old.volume(), 0, 1600)
           const oid = old
@@ -165,3 +170,5 @@ class MusicPlayer {
 }
 
 export const music = new MusicPlayer()
+
+if (import.meta.env.DEV) (window as unknown as { __music?: MusicPlayer }).__music = music

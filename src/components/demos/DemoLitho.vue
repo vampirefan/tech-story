@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, clamp } from './useDemo'
+import { useDemoTouch, useRaf, clamp, useAutoDemo, seg, lerp, smooth } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -44,6 +44,16 @@ function go(i: number) {
 }
 const done = computed(() => step.value >= STEPS.length - 1)
 
+/* 自动演示：六步做完一层电路，再把波长从 g 线一路推到 EUV */
+useAutoDemo((t) => {
+  const s = seg(t, 2, 4, 4, 4, 4, 4, 4, 8)
+  step.value = Math.min(s.i - 1, STEPS.length - 1)
+  if (s.i > STEPS.length) {
+    wi.value = Math.min(WAVES.length - 1, Math.floor(s.p * WAVES.length))
+    NA.value = lerp(0.55, 1.35, smooth(s.p))
+  } else { wi.value = 1; NA.value = 0.75 }
+}, 34)
+
 const status = computed(() => {
   if (step.value < 0) return { text: '按顺序点六步，看一层电路怎么"印"到硅片上。下面可以换光的波长，看能做多细的线。' }
   if (done.value) return { text: `一层做完！用 ${wave.value.n}（λ=${wave.value.λ}nm）光，最小线宽约 ${cd.value.toFixed(1)}nm。重复 ${layers.value} 层以上，每平方毫米能挤下约 ${density.value} 万个晶体管。`, kind: 'good' as const }
@@ -78,7 +88,7 @@ const status = computed(() => {
           <stop offset="0" stop-color="#cfe6ff" stop-opacity="0.85" /><stop offset="1" stop-color="#5cc8ff" stop-opacity="0.15" />
         </linearGradient>
       </defs>
-      <rect width="460" height="216" fill="#060c1c" />
+      <rect width="460" height="216" class="stage-bg" />
 
       <!-- 掩膜版 -->
       <g v-if="step >= 0" opacity="0.95">
@@ -155,7 +165,7 @@ const status = computed(() => {
         <text class="lbl" font-size="8.5" y="18">当前线宽 {{ cd.toFixed(1) }}nm（放大 900 倍显示）</text>
       </g>
       <g transform="translate(316,190)">
-        <rect x="-6" y="-8" width="144" height="30" rx="5" fill="rgba(6,12,28,0.85)" stroke="rgba(120,190,255,0.18)" />
+        <rect x="-6" y="-8" width="144" height="30" rx="5" fill="rgba(var(--veil),0.85)" stroke="rgba(var(--tint),0.18)" />
         <text class="lbl" font-size="8.5" x="2" y="4">{{ wave.n }} · λ={{ wave.λ }}nm · {{ wave.year }}</text>
         <text class="val" font-size="12" x="2" y="18">CD ≈ {{ cd.toFixed(1) }} nm</text>
       </g>

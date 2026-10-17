@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, approach, clamp } from './useDemo'
+import { useDemoTouch, useRaf, approach, clamp, useAutoDemo, seg, lerp, smooth, edgeTrigger } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -43,6 +43,24 @@ function axis(which: 'roll' | 'pitch' | 'yaw', dir: number) {
   if (which === 'yaw') yaw.value = clamp(yaw.value + dir * 20, -45, 45)
   touch('tick', 0.35)
 }
+
+/* 自动演示：抬机头 → 超过临界迎角失速 → 推杆增速改出 → 三轴舵面 */
+const hit = edgeTrigger()
+useAutoDemo((t) => {
+  const s = seg(t, 7, 6, 7, 5, 5)
+  if (s.i === 0) { alpha.value = lerp(2, 12, smooth(s.p)); speed.value = 60 }
+  else if (s.i === 1) { alpha.value = lerp(12, 21, smooth(s.p)) }
+  else if (s.i === 2) { alpha.value = lerp(21, 6, smooth(s.p)); speed.value = lerp(55, 95, smooth(s.p)) }
+  else if (s.i === 3) { alpha.value = 8; speed.value = lerp(30, 120, smooth(s.p)) }
+  else {
+    alpha.value = 6; speed.value = 70
+    if (hit(t, 25.3)) axis('roll', 1)
+    if (hit(t, 26.3)) axis('roll', -1)
+    if (hit(t, 27.3)) axis('pitch', 1)
+    if (hit(t, 28.3)) axis('yaw', 1)
+    if (hit(t, 29.3)) axis('yaw', -1)
+  }
+}, 30)
 
 /** 翼型轮廓（NACA 简化） */
 const foil = computed(() => {
@@ -103,7 +121,7 @@ const status = computed(() => {
           <stop offset="0" stop-color="#cfe0f5" /><stop offset="0.55" stop-color="#7b8798" /><stop offset="1" stop-color="#39414f" />
         </linearGradient>
       </defs>
-      <rect width="460" height="232" fill="#060c1c" />
+      <rect width="460" height="232" class="stage-bg" />
 
       <!-- 失速警报 -->
       <g v-if="stalled">
@@ -123,7 +141,7 @@ const status = computed(() => {
       <!-- 机翼 -->
       <path :d="foil" fill="url(#flWing)" stroke="#1b212b" stroke-width="1.2" />
       <!-- 迎角参考线 -->
-      <line x1="120" y1="130" x2="330" y2="130" stroke="rgba(120,190,255,0.28)" stroke-width="1" stroke-dasharray="4 4" />
+      <line x1="120" y1="130" x2="330" y2="130" stroke="rgba(var(--tint),0.28)" stroke-width="1" stroke-dasharray="4 4" />
       <line x1="150" y1="130" x2="286" y2="130" stroke="#ffb347" stroke-width="1.4"
         :transform="`rotate(${-alpha} 150 130)`" />
       <path :d="`M230,130 A80,80 0 0 0 ${230 - 80 * Math.cos(alpha * Math.PI / 180) + 80},${130 - 80 * Math.sin(alpha * Math.PI / 180)}`"
@@ -147,10 +165,10 @@ const status = computed(() => {
 
       <!-- 升力曲线小图 -->
       <g transform="translate(30,150)">
-        <rect x="0" y="0" width="96" height="66" rx="5" fill="rgba(6,12,28,0.8)" stroke="rgba(120,190,255,0.16)" />
+        <rect x="0" y="0" width="96" height="66" rx="5" fill="rgba(var(--veil),0.8)" stroke="rgba(var(--tint),0.16)" />
         <text x="8" y="13" class="lbl" font-size="8.5">升力系数 CL</text>
-        <line x1="10" y1="56" x2="88" y2="56" stroke="rgba(120,190,255,0.25)" />
-        <line x1="10" y1="20" x2="10" y2="56" stroke="rgba(120,190,255,0.25)" />
+        <line x1="10" y1="56" x2="88" y2="56" stroke="rgba(var(--tint),0.25)" />
+        <line x1="10" y1="20" x2="10" y2="56" stroke="rgba(var(--tint),0.25)" />
         <path d="M10,56 L52,24 Q60,20 66,34 L86,52" fill="none" stroke="#34d399" stroke-width="1.8" />
         <line :x1="10 + alpha / 26 * 76" y1="20" :x2="10 + alpha / 26 * 76" y2="56" stroke="#ffb347" stroke-width="1.2" stroke-dasharray="2 2" />
         <circle :cx="10 + alpha / 26 * 76" :cy="56 - clamp(cl / 1.9, 0, 1) * 36" r="3" fill="#ffd166" />
@@ -159,11 +177,11 @@ const status = computed(() => {
 
       <!-- 三轴控制 -->
       <g transform="translate(374,120)">
-        <rect x="-72" y="-84" width="146" height="106" rx="6" fill="rgba(6,12,28,0.7)" stroke="rgba(120,190,255,0.16)" />
+        <rect x="-72" y="-84" width="146" height="106" rx="6" fill="rgba(var(--veil),0.7)" stroke="rgba(var(--tint),0.16)" />
         <text x="-64" y="-70" class="lbl" font-size="9">三轴姿态</text>
-        <circle cx="0" cy="-30" r="34" fill="rgba(20,32,58,0.6)" stroke="rgba(120,190,255,0.2)" />
-        <line x1="-34" y1="-30" x2="34" y2="-30" stroke="rgba(120,190,255,0.18)" />
-        <line x1="0" y1="-64" x2="0" y2="4" stroke="rgba(120,190,255,0.18)" />
+        <circle cx="0" cy="-30" r="34" fill="rgba(20,32,58,0.6)" stroke="rgba(var(--tint),0.2)" />
+        <line x1="-34" y1="-30" x2="34" y2="-30" stroke="rgba(var(--tint),0.18)" />
+        <line x1="0" y1="-64" x2="0" y2="4" stroke="rgba(var(--tint),0.18)" />
         <g :transform="`rotate(${roll} 0 -30)`">
           <path d="M-30,-30 h60 l-6,-5 h-48 z" fill="#8a94a5" stroke="#2b3444" />
           <rect x="-4" y="-33" width="8" height="20" rx="2" fill="#c9d6e8" />

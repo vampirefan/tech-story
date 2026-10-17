@@ -15,7 +15,8 @@ const DEFAULTS: Settings = {
   showLabels: true,
   quality: 'high',
   bloom: true,
-  borderDensity: 'era'
+  borderDensity: 'era',
+  theme: 'dark'
 }
 
 function load(): Settings {
@@ -45,10 +46,20 @@ export const useSettings = defineStore('settings', {
       }, 800)
     },
     persist() {
-      const { musicVolume, sfxVolume, muted, freeExplore, autoplay, playSpeed, showLabels, quality, bloom, borderDensity } = this
+      const { musicVolume, sfxVolume, muted, freeExplore, autoplay, playSpeed, showLabels, quality, bloom, borderDensity, theme } = this
       try {
-        localStorage.setItem(KEY, JSON.stringify({ musicVolume, sfxVolume, muted, freeExplore, autoplay, playSpeed, showLabels, quality, bloom, borderDensity }))
+        localStorage.setItem(KEY, JSON.stringify({ musicVolume, sfxVolume, muted, freeExplore, autoplay, playSpeed, showLabels, quality, bloom, borderDensity, theme }))
       } catch { /* 隐私模式下 localStorage 不可用，忽略 */ }
+    },
+
+    /** 把当前主题写到 <html data-theme>，index.html 的首屏脚本也读同一份设置 */
+    applyTheme() {
+      document.documentElement.dataset.theme = this.theme
+    },
+    setTheme(v: Settings['theme']) {
+      this.theme = v
+      this.applyTheme()
+      this.persist()
     },
 
     /** 首次用户手势后解锁音频（浏览器自动播放策略） */

@@ -85,6 +85,14 @@ function pick(id: string) {
             <span class="sets__k">画质</span>
             <UiSegmented :model-value="settings.quality" :options="QUALITY" @update:model-value="v => settings.setQuality(v as never)" />
           </div>
+          <div class="row gap-3">
+            <span class="sets__k">主题</span>
+            <UiSegmented
+              :model-value="settings.theme"
+              :options="[{ value: 'dark', label: '🌌 深空暗色' }, { value: 'light', label: '📖 纸白亮色' }]"
+              @update:model-value="v => settings.setTheme(v as never)"
+            />
+          </div>
           <UiSwitch :model-value="settings.bloom" label="泛光特效" hint="关掉可以明显提高低端机帧率" @change="settings.setBloom" />
           <UiSwitch :model-value="settings.showLabels" label="显示国家 / 地点标签" @change="settings.setShowLabels" />
           <div class="row gap-3">
@@ -163,15 +171,15 @@ function pick(id: string) {
   display: flex; align-items: center; gap: 9px;
   padding: 7px 11px; border-radius: var(--r-sm);
   border: 1px solid var(--line);
-  background: rgba(8, 18, 42, 0.55);
+  background: rgba(var(--veil), 0.55);
   text-align: left;
   transition: all var(--dur-fast) var(--ease-out);
 }
 .track:hover { border-color: var(--line-strong); background: rgba(0, 212, 255, 0.08); transform: translateX(2px); }
 .track.is-on { border-color: rgba(255, 179, 71, 0.6); background: rgba(255, 179, 71, 0.1); box-shadow: 0 0 14px rgba(255, 179, 71, 0.18); }
-.track__icon { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 9px; background: rgba(0, 212, 255, 0.14); color: var(--c-cyan); border: 1px solid var(--line); }
+.track__icon { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 10.5px; background: rgba(0, 212, 255, 0.14); color: var(--c-cyan); border: 1px solid var(--line); }
 .track.is-on .track__icon { background: rgba(255, 179, 71, 0.18); color: var(--c-amber); border-color: rgba(255, 179, 71, 0.4); }
 .track__label { font-size: 12.5px; color: var(--t-hi); line-height: 1.3; }
-.track__meta { font-size: 10px; color: var(--t-faint); }
-.track__dur { font-size: 10px; color: var(--t-lo); flex: none; }
+.track__meta { font-size: 11px; color: var(--t-faint); }
+.track__dur { font-size: 11px; color: var(--t-lo); flex: none; }
 </style>

@@ -505,7 +505,7 @@ onMounted(() => { settings.sfx('page', 0.5); sync(node.value) })
   position: sticky; top: 0; z-index: 12;
   display: flex; align-items: center; gap: 10px;
   padding: 9px calc(max(var(--s-6), (100% - 900px) / 2));
-  background: linear-gradient(180deg, rgba(3, 6, 15, 0.97), rgba(3, 6, 15, 0.92));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.97), rgba(var(--veil), 0.92));
   border-bottom: 1px solid var(--line);
 }
 .nd__back { font-size: 12px; color: var(--t-mid); transition: color var(--dur-fast); }
@@ -559,7 +559,7 @@ onMounted(() => { settings.sfx('page', 0.5); sync(node.value) })
 .nd__art img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .nd__art figcaption {
   padding: 7px 12px; color: var(--t-faint); letter-spacing: 0.14em;
-  background: linear-gradient(180deg, rgba(6, 12, 30, 0.4), rgba(6, 12, 30, 0.9));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.4), rgba(var(--veil), 0.9));
   border-top: 1px solid var(--line);
 }
 .nd__chars { display: flex; flex-direction: column; gap: 9px; margin-top: var(--s-4); }
@@ -580,7 +580,7 @@ onMounted(() => { settings.sfx('page', 0.5); sync(node.value) })
   display: flex; flex-direction: column; gap: 10px;
   padding: var(--s-4);
   border: 1px solid var(--line); border-radius: var(--r-md);
-  background: linear-gradient(180deg, rgba(8, 15, 34, 0.6), rgba(5, 10, 24, 0.78));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.6), rgba(var(--veil), 0.78));
 }
 .nd__cause { display: flex; flex-direction: column; gap: 7px; }
 .nd__none { font-size: 12.5px; color: var(--t-lo); font-style: italic; }
@@ -588,7 +588,7 @@ onMounted(() => { settings.sfx('page', 0.5); sync(node.value) })
   display: flex; align-items: center; gap: 10px;
   padding: 9px 13px; border-radius: var(--r-sm);
   border: 1px solid color-mix(in srgb, var(--cat) 55%, transparent);
-  background: color-mix(in srgb, var(--cat) 13%, rgba(6, 12, 30, 0.7));
+  background: color-mix(in srgb, var(--cat) 13%, rgba(var(--veil), 0.7));
   box-shadow: 0 0 22px color-mix(in srgb, var(--cat) 18%, transparent);
 }
 .nd__self-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--cat); box-shadow: 0 0 10px var(--cat); flex: none; }
@@ -606,7 +606,7 @@ onMounted(() => { settings.sfx('page', 0.5); sync(node.value) })
   background: linear-gradient(90deg, color-mix(in srgb, var(--c-rose) 8%, transparent), transparent 70%);
 }
 .nd__war-kind {
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em;
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em;
   color: var(--c-rose); white-space: nowrap;
 }
 .nd__war-flow { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--t-mid); min-width: 0; }
@@ -623,7 +623,7 @@ onMounted(() => { settings.sfx('page', 0.5); sync(node.value) })
   display: flex; gap: 11px; align-items: baseline;
   padding: 10px 13px;
   border: 1px solid var(--line); border-radius: var(--r-sm);
-  background: rgba(8, 18, 42, 0.5);
+  background: rgba(var(--veil), 0.5);
   font-size: 13px; line-height: 1.75; color: var(--t-mid);
   transition: all var(--dur-fast) var(--ease-out);
 }
@@ -655,7 +655,7 @@ onMounted(() => { settings.sfx('page', 0.5); sync(node.value) })
   font-size: 13px; font-weight: 700; color: var(--t-hi);
 }
 .nd__media-h span {
-  font-family: var(--f-mono); font-size: 10px; color: var(--t-lo);
+  font-family: var(--f-mono); font-size: 11px; color: var(--t-lo);
   padding: 1px 7px; border-radius: 9px; border: 1px solid var(--line);
 }
 
@@ -665,7 +665,7 @@ onMounted(() => { settings.sfx('page', 0.5); sync(node.value) })
   display: flex; flex-direction: column; gap: 3px;
   padding: 11px 16px; max-width: 46%;
   border: 1px solid var(--line); border-radius: var(--r-md);
-  background: rgba(8, 18, 42, 0.55);
+  background: rgba(var(--veil), 0.55);
   text-align: left;
   transition: all var(--dur-fast) var(--ease-out);
 }
@@ -713,7 +713,7 @@ onMounted(() => { settings.sfx('page', 0.5); sync(node.value) })
   background: linear-gradient(90deg, color-mix(in srgb, var(--ec, var(--c-cyan)) 50%, transparent), var(--ec, var(--c-cyan)));
   box-shadow: 0 0 9px color-mix(in srgb, var(--ec, var(--c-cyan)) 55%, transparent);
 }
-.nd__lead-pct { font-size: 10.5px; color: var(--ec, var(--c-cyan)); text-align: right; }
+.nd__lead-pct { font-size: 11.5px; color: var(--ec, var(--c-cyan)); text-align: right; }
 .nd__era-note { font-size: 12px; color: var(--ea, var(--c-amber)); line-height: 1.65; }
 .nd__era :deep(.btn) { flex: 1; justify-content: center; }
 

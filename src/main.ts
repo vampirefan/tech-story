@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import { router } from './router'
 import { hydrateContent } from './stores/content'
+import { useSettings } from './stores/settings'
 
 import './styles/tokens.css'
 import './styles/base.css'
@@ -13,6 +14,7 @@ import './styles/demo.css'
 const app = createApp(App)
 app.use(createPinia())
 app.use(router)
+useSettings().applyTheme()
 hydrateContent()
 
 // 兜底：任何漏到顶层的异常只记录，不让默认行为把界面弄成黑屏

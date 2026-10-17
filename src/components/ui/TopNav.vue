@@ -70,7 +70,7 @@ const isRoot = computed(() => route.name === 'opening')
   position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-panel);
   height: 52px; padding: 0 var(--s-4);
   display: flex; align-items: center; gap: var(--s-4);
-  background: linear-gradient(180deg, rgba(4, 9, 24, 0.96), rgba(4, 9, 24, 0.86));
+  background: linear-gradient(180deg, rgba(var(--veil), 0.96), rgba(var(--veil), 0.86));
   border-bottom: 1px solid var(--line);
   box-shadow: 0 6px 26px rgba(0, 0, 0, 0.45);
 }
@@ -82,7 +82,7 @@ const isRoot = computed(() => route.name === 'opening')
   animation: pulseGlow 3.4s ease-in-out infinite;
 }
 .topnav__title { font-family: var(--f-display); font-size: 14px; font-weight: 700; letter-spacing: 0.09em; color: var(--t-hi); white-space: nowrap; }
-.topnav__sub { font-size: 9.5px; letter-spacing: 0.2em; color: var(--t-faint); text-transform: uppercase; }
+.topnav__sub { font-size: 11px; letter-spacing: 0.2em; color: var(--t-faint); text-transform: uppercase; }
 
 .topnav__links { display: flex; align-items: center; gap: 3px; flex: 1 1 auto; justify-content: center; }
 .topnav__link {
@@ -104,7 +104,7 @@ const isRoot = computed(() => route.name === 'opening')
 .topnav__right { display: flex; align-items: center; gap: var(--s-2); flex: none; }
 .topnav__prog { display: flex; align-items: center; gap: 7px; min-width: 108px; }
 .topnav__bar { flex: 1 1 auto; }
-.topnav__pct { font-size: 10.5px; color: var(--c-cyan); min-width: 30px; text-align: right; }
+.topnav__pct { font-size: 11.5px; color: var(--c-cyan); min-width: 30px; text-align: right; }
 .topnav__track {
   display: flex; align-items: center; gap: 7px;
   padding: 4px 10px; border-radius: 20px;

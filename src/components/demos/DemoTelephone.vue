@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, clamp } from './useDemo'
+import { useDemoTouch, useRaf, clamp, useAutoDemo, seg, lerp, smooth } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -27,6 +27,16 @@ useRaf((dt) => {
   // 线路噪声：模拟信号随距离衰减并混入杂音，数字信号只受采样精度影响
   noise.value = digital.value ? clamp(1 / sampleRate.value * 3.2, 0, 0.5) : 0.06 + (1 - amp.value) * 0.12
 })
+
+/* 自动演示：说话 → 换音调 → 数字采样由稀到密 → 回到模拟看噪声 */
+useAutoDemo((t) => {
+  const s = seg(t, 6, 6, 10, 6)
+  speaking.value = true
+  if (s.i === 0) { digital.value = false; sampleRate.value = 12; amp.value = lerp(0.25, 0.9, smooth(s.p)); freq.value = 2.4 }
+  else if (s.i === 1) { amp.value = 0.7; freq.value = lerp(1.2, 4.2, smooth(s.p)) }
+  else if (s.i === 2) { digital.value = true; freq.value = 2.4; sampleRate.value = Math.round(lerp(3, 32, smooth(s.p))) }
+  else { digital.value = false; sampleRate.value = 12; amp.value = lerp(0.7, 0.2, smooth(s.p)); speaking.value = s.p < 0.72 }
+}, 28)
 
 const traceLen = 372
 const path = (fn: (t: number) => number, y: number, a: number) => {
@@ -80,7 +90,7 @@ const status = computed(() => {
           <stop offset="0" stop-color="#8a94a5" /><stop offset="0.5" stop-color="#4a5568" /><stop offset="1" stop-color="#232a36" />
         </linearGradient>
       </defs>
-      <rect width="460" height="246" fill="#060c1c" />
+      <rect width="460" height="246" class="stage-bg" />
 
       <!-- ══ 发送端 ══ -->
       <g transform="translate(40,58)">
@@ -163,9 +173,9 @@ const status = computed(() => {
 
       <!-- ══ 示波器 ══ -->
       <g transform="translate(0,116)">
-        <rect x="36" y="0" width="388" height="118" rx="6" fill="rgba(4,10,24,0.85)" stroke="rgba(120,190,255,0.16)" />
+        <rect x="36" y="0" width="388" height="118" rx="6" fill="rgba(4,10,24,0.85)" stroke="rgba(var(--tint),0.16)" />
         <g v-for="i in 3" :key="i">
-          <line x1="44" :y1="i * 39" x2="416" :y2="i * 39" stroke="rgba(120,190,255,0.07)" />
+          <line x1="44" :y1="i * 39" x2="416" :y2="i * 39" stroke="rgba(var(--tint),0.07)" />
         </g>
         <g transform="translate(0,22)">
           <path :d="sndPath" fill="none" stroke="#5cc8ff" stroke-width="1.6" opacity="0.95" />

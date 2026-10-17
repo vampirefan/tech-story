@@ -94,7 +94,7 @@ onMounted(build)
         </radialGradient>
       </defs>
       <rect x="-180" y="-90" width="360" height="180" fill="url(#mmOcean)" />
-      <g v-if="graticule" stroke="rgba(120,190,255,0.13)" stroke-width="0.4" fill="none">
+      <g v-if="graticule" stroke="rgba(var(--tint),0.13)" stroke-width="0.4" fill="none">
         <path v-for="lng in [-150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150]" :key="lng" :d="`M${lng},-90 V90`" />
         <path v-for="lat in [-60, -30, 0, 30, 60]" :key="lat" :d="`M-180,${-lat} H180`" />
         <path d="M-180,0 H180" stroke="rgba(255,179,71,0.28)" stroke-width="0.6" stroke-dasharray="3 3" />
@@ -136,16 +136,16 @@ onMounted(build)
 .minimap__load {
   position: absolute; inset: 0; z-index: 2;
   display: grid; place-items: center;
-  background: rgba(5, 10, 30, 0.5);
+  background: rgba(var(--veil), 0.5);
 }
 .minimap__load .spinner { width: 22px; height: 22px; }
 .minimap__foot {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   padding: 6px 9px;
   border-top: 1px solid var(--line);
-  background: rgba(4, 9, 24, 0.72);
+  background: rgba(var(--veil), 0.72);
 }
-.minimap__coord { font-family: var(--f-mono); font-size: 10px; color: var(--t-lo); letter-spacing: 0.03em; }
-.minimap__hint { font-size: 10.5px; color: var(--c-cyan); opacity: 0.8; }
+.minimap__coord { font-family: var(--f-mono); font-size: 11px; color: var(--t-lo); letter-spacing: 0.03em; }
+.minimap__hint { font-size: 11.5px; color: var(--c-cyan); opacity: 0.8; }
 .minimap--compact .minimap__hint { display: none; }
 </style>

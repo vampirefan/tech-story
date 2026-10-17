@@ -588,6 +588,7 @@ export class GlobeEngine {
 
   /** rAF 为主；页面可见但合成器不产帧的环境（无头/嵌入）用定时器兜底 */
   private scheduleNext() {
+    this.looping = true
     let fired = false
     const go = () => { if (!fired) { fired = true; this.loop() } }
     this.raf = window.requestAnimationFrame(go)
@@ -595,7 +596,7 @@ export class GlobeEngine {
   }
 
   private loop = () => {
-    if (this.disposed || this.ctxLost || this.paused) return
+    if (this.disposed || this.ctxLost || this.paused) { this.looping = false; return }
     this.scheduleNext()
     const dt = Math.min(0.05, this.clock.getDelta())
     const time = this.clock.elapsedTime
@@ -630,8 +631,17 @@ export class GlobeEngine {
   private onCtxRestored = () => {
     if (this.disposed || this.paused) return
     this.ctxLost = false
+    this.ensureLoop()
+  }
+
+  /** 主循环是否在调度中：任何"以为在跑其实停了"的路径都靠 ensureLoop 兜底重启 */
+  private looping = false
+
+  /** 幂等地确保主循环在跑（暂停/销毁/上下文丢失时不动作） */
+  ensureLoop() {
+    if (this.looping || this.disposed || this.ctxLost || this.paused) return
     this.clock.getDelta()
-    this.scheduleNext()
+    this.loop()
   }
 
   /** 弹窗展开时暂停渲染：全屏遮罩与动画中的 WebGL 画布争抢合成器会拖垮 GPU 进程 */
@@ -642,9 +652,9 @@ export class GlobeEngine {
     if (p) {
       window.cancelAnimationFrame(this.raf)
       window.clearTimeout(this.frameTimer)
-    } else if (!this.disposed && !this.ctxLost) {
-      this.clock.getDelta()
-      this.scheduleNext()
+      this.looping = false
+    } else {
+      this.ensureLoop()
     }
   }
 
@@ -817,7 +827,7 @@ export class GlobeEngine {
       if (Array.isArray(mat)) mat.forEach(m => m.dispose())
       else mat?.dispose?.()
     })
-    if (this.tex) for (const t of Object.values(this.tex)) t.dispose()
+    // 地球纹理是 textures.ts 的模块级共享缓存，随实例 dispose 会把下一次进入的地球一起毁掉
     this.composer?.dispose()
     this.renderer.dispose()
     // 立即归还 GPU 上下文：场景反复切换时不堆积上下文，避免被浏览器批量回收导致黑屏

@@ -20,6 +20,9 @@ const KIND: Record<string, { label: string; icon: string }> = {
 }
 const kind = computed(() => KIND[props.item.kind] ?? KIND.book)
 
+/** 封面存相对路径，打包后 BASE_URL 会变，这里统一解析 */
+const coverSrc = computed(() => (props.item.cover ? `${import.meta.env.BASE_URL}${props.item.cover}` : undefined))
+
 /** 只有映射到真实音频文件的条目才能播放，其余走程序合成氛围 */
 const playableId = computed(() => {
   const id = props.item.id
@@ -46,7 +49,7 @@ function play() {
     <div class="media-card__cover">
       <CoverArt
         :title="item.title" :author="item.author" :glyph="item.glyph"
-        :palette="item.palette" :kind="item.kind" :src="item.cover"
+        :palette="item.palette" :kind="item.kind" :src="coverSrc"
         :w="compact ? 160 : 240" :h="compact ? 220 : 340"
       />
       <button
@@ -72,12 +75,12 @@ function play() {
 .media-card { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
 .media-card__cover { position: relative; flex: none; background: #060c1e; }
 .media-card__cover :deep(.cover) { border-radius: 0; border: 0; border-bottom: 1px solid var(--line); }
-.media-card__kind { position: absolute; top: 8px; left: 8px; background: rgba(4, 10, 26, 0.9); }
+.media-card__kind { position: absolute; top: 8px; left: 8px; background: rgba(var(--veil), 0.9); }
 .media-card__play {
   position: absolute; right: 9px; bottom: 9px;
   width: 38px; height: 38px; border-radius: 50%;
   display: grid; place-items: center;
-  background: rgba(4, 12, 30, 0.88);
+  background: rgba(var(--veil), 0.88);
   border: 1px solid var(--line-hot);
   color: var(--c-cyan); font-size: 13px;
   box-shadow: var(--glow-cyan);
@@ -95,7 +98,7 @@ function play() {
   padding-left: 9px; margin-top: 4px;
 }
 .media-card__reason .label-xs { display: block; color: var(--t-faint); margin-bottom: 2px; }
-.media-card__dur { font-size: 10.5px; color: var(--t-faint); }
+.media-card__dur { font-size: 11.5px; color: var(--t-faint); }
 .media-card--compact .media-card__title { font-size: 13px; }
 .media-card--compact .media-card__intro { font-size: 11.5px; }
 </style>

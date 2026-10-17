@@ -27,5 +27,5 @@ function toggle() {
 
 <style scoped>
 .switch__track--amber { --c-cyan: var(--c-amber); --c-cyan-glow: var(--c-amber-glow); }
-.switch__hint { font-size: 10.5px; color: var(--t-faint); line-height: 1.4; }
+.switch__hint { font-size: 11.5px; color: var(--t-faint); line-height: 1.4; }
 </style>

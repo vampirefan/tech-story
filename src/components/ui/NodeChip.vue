@@ -60,7 +60,7 @@ function go(e: MouseEvent) {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 6px 11px; border-radius: 20px;
   border: 1px solid color-mix(in srgb, var(--cat) 38%, transparent);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--cat) 13%, transparent), rgba(6, 12, 30, 0.72));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cat) 13%, transparent), rgba(var(--veil), 0.72));
   color: var(--t-hi);
   font-size: 12.5px; font-weight: 600;
   transition: all var(--dur-fast) var(--ease-out);
@@ -76,8 +76,8 @@ function go(e: MouseEvent) {
 .chip__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cat); box-shadow: 0 0 7px var(--cat); flex: none; }
 .chip__name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chip__flag { font-size: 12px; line-height: 1; }
-.chip__year { font-family: var(--f-mono); font-size: 10px; color: var(--t-lo); white-space: nowrap; }
-.chip__lock { font-size: 10px; opacity: 0.75; }
+.chip__year { font-family: var(--f-mono); font-size: 11px; color: var(--t-lo); white-space: nowrap; }
+.chip__lock { font-size: 11px; opacity: 0.75; }
 .chip__check { font-size: 11px; color: var(--c-emerald); font-weight: 800; }
 .chip.is-locked { opacity: 0.42; filter: saturate(0.35); }
 .chip.is-locked:hover { transform: none; box-shadow: none; }

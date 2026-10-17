@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, approach, clamp } from './useDemo'
+import { useDemoTouch, useRaf, approach, clamp, useAutoDemo, seg, lerp, smooth } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -86,6 +86,22 @@ const bright = (p: number) => clamp(p / 14, 0, 1)
 const seriesPath = 'M120,96 H188 M292,96 H340 M340,96 V168 M120,96 V168 M120,168 H188 M292,168 H340'
 const parallelPath = 'M120,132 H188 M292,132 H340 M340,132 V72 M340,132 V192 M120,132 V72 H188 M120,132 V192 H188 M292,72 H340 M292,192 H340'
 
+/* 自动演示：磁铁来回穿线圈 → 加匝数 → 串联 / 并联与开关通断 */
+useAutoDemo((t) => {
+  const s = seg(t, 15, 17)
+  if (s.i === 0) {
+    mode.value = 'induction'
+    magX.value = 248 + Math.sin(t * 1.05) * 150
+    turns.value = Math.round(lerp(12, 110, smooth(s.p)))
+  } else {
+    mode.value = 'circuit'
+    wiring.value = s.p < 0.42 ? 'series' : 'parallel'
+    volt.value = Math.round(lerp(3, 24, smooth(clamp(s.p / 0.9, 0, 1))) * 2) / 2
+    loose.value = s.p > 0.52 && s.p < 0.74
+    closed.value = !(s.p > 0.84 && s.p < 0.94)
+  }
+}, 32)
+
 const status = computed(() => {
   if (mode.value === 'induction') {
     if (Math.abs(emf.value) < 0.12) return { text: '磁铁不动 → 磁通量不变 → 没有感应电流。电流计指针停在 0。必须是"变化"才有电！' }
@@ -123,7 +139,7 @@ const status = computed(() => {
           <stop offset="0.5" stop-color="#5cc8ff" /><stop offset="1" stop-color="#5cc8ff" />
         </linearGradient>
       </defs>
-      <rect width="460" height="224" fill="#060c1c" />
+      <rect width="460" height="224" class="stage-bg" />
 
       <!-- 磁力线 -->
       <g :opacity="0.55">
@@ -137,7 +153,7 @@ const status = computed(() => {
 
       <!-- 线圈 -->
       <g>
-        <rect x="216" y="66" width="48" height="92" rx="6" fill="rgba(20,32,58,0.65)" stroke="rgba(120,190,255,0.3)" />
+        <rect x="216" y="66" width="48" height="92" rx="6" fill="rgba(20,32,58,0.65)" stroke="rgba(var(--tint),0.3)" />
         <g v-for="i in Math.min(turns, 26)" :key="i">
           <ellipse cx="240" cy="112" :rx="16 + (i % 5) * 2.2" :ry="42 - (i % 3) * 1.5" fill="none"
             stroke="#d8a44a" stroke-width="1.5" :opacity="0.28 + (i % 4) * 0.12" />
@@ -160,11 +176,11 @@ const status = computed(() => {
       <!-- 电流计 -->
       <g transform="translate(230,196)">
         <rect x="-58" y="-14" width="116" height="26" rx="6" fill="#0a1220" stroke="#a9822f" stroke-width="1.6" />
-        <path d="M-44,-2 A44,44 0 0 1 44,-2" fill="none" stroke="rgba(120,190,255,0.25)" stroke-width="1.4" />
+        <path d="M-44,-2 A44,44 0 0 1 44,-2" fill="none" stroke="rgba(var(--tint),0.25)" stroke-width="1.4" />
         <g v-for="i in 9" :key="i">
           <line :x1="Math.cos(Math.PI + (i - 1) / 8 * Math.PI) * 40" :y1="-2 + Math.sin(Math.PI + (i - 1) / 8 * Math.PI) * 40"
             :x2="Math.cos(Math.PI + (i - 1) / 8 * Math.PI) * 44" :y2="-2 + Math.sin(Math.PI + (i - 1) / 8 * Math.PI) * 44"
-            stroke="rgba(120,190,255,0.45)" stroke-width="1" />
+            stroke="rgba(var(--tint),0.45)" stroke-width="1" />
         </g>
         <line x1="0" y1="-2" :x2="Math.sin(needle / 6 * 1.2) * 40" :y2="-2 - Math.cos(needle / 6 * 1.2) * 40"
           :stroke="Math.abs(needle) > 0.2 ? '#ffd166' : '#8fd0ff'" stroke-width="2.2" stroke-linecap="round" />
@@ -187,7 +203,7 @@ const status = computed(() => {
           <stop offset="1" stop-color="#ffb347" stop-opacity="0" />
         </radialGradient>
       </defs>
-      <rect width="460" height="224" fill="#060c1c" />
+      <rect width="460" height="224" class="stage-bg" />
 
       <!-- 导线 -->
       <g>
@@ -232,7 +248,7 @@ const status = computed(() => {
 
       <!-- 读数 -->
       <g transform="translate(356,60)">
-        <rect x="-8" y="-20" width="106" height="106" rx="6" fill="rgba(6,12,28,0.85)" stroke="rgba(120,190,255,0.18)" />
+        <rect x="-8" y="-20" width="106" height="106" rx="6" fill="rgba(var(--veil),0.85)" stroke="rgba(var(--tint),0.18)" />
         <text class="lbl" font-size="9" x="0" y="-6">回路读数</text>
         <text class="lbl" font-size="10" x="0" y="14">电压</text><text class="val" x="90" y="14" text-anchor="end">{{ volt.toFixed(1) }} V</text>
         <text class="lbl" font-size="10" x="0" y="34">总电阻</text><text class="val" x="90" y="34" text-anchor="end">{{ totalR === Infinity ? '∞' : totalR.toFixed(1) + ' Ω' }}</text>

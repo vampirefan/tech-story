@@ -73,16 +73,16 @@ function goGlobe() { void router.push('/globe') }
                 <rect :x="i * SLOT" y="6" :width="SLOT" height="204" fill="transparent" />
                 <rect v-if="selEra === r.era" :x="i * SLOT + 2" y="6" :width="SLOT - 4" height="204" rx="6" fill="rgba(255,179,71,0.08)" stroke="rgba(255,179,71,0.35)" />
                 <!-- 世界最强 -->
-                <rect :x="i * SLOT + SLOT / 2 - 24" :y="barY(r.leaderV)" width="18" :height="190 - barY(r.leaderV)" rx="3" fill="rgba(120,190,255,0.32)" />
+                <rect :x="i * SLOT + SLOT / 2 - 24" :y="barY(r.leaderV)" width="18" :height="190 - barY(r.leaderV)" rx="3" fill="rgba(var(--tint),0.32)" />
                 <!-- 中国 -->
                 <rect :x="i * SLOT + SLOT / 2 + 4" :y="barY(r.china)" width="18" :height="190 - barY(r.china)" rx="3"
                   :fill="r.china >= r.leaderV ? '#ffd166' : '#c9a227'" :opacity="selEra === r.era ? 1 : 0.85" />
                 <text :x="i * SLOT + SLOT / 2" y="206" text-anchor="middle" font-size="11" :fill="selEra === r.era ? '#ffd166' : '#64809f'">{{ r.name }}</text>
                 <text :x="i * SLOT + SLOT / 2" y="222" text-anchor="middle" font-size="9.5" fill="#3d5875">第 {{ r.rank }} 名</text>
               </g>
-              <line x1="0" y1="190" x2="980" y2="190" stroke="rgba(120,190,255,0.2)" />
+              <line x1="0" y1="190" x2="980" y2="190" stroke="rgba(var(--tint),0.2)" />
               <g font-size="10" fill="#64809f">
-                <rect x="12" y="16" width="12" height="12" rx="2" fill="rgba(120,190,255,0.32)" /><text x="30" y="26">同时代世界最强</text>
+                <rect x="12" y="16" width="12" height="12" rx="2" fill="rgba(var(--tint),0.32)" /><text x="30" y="26">同时代世界最强</text>
                 <rect x="128" y="16" width="12" height="12" rx="2" fill="#c9a227" /><text x="146" y="26">中国</text>
               </g>
             </svg>
@@ -230,6 +230,7 @@ function goGlobe() { void router.push('/globe') }
 .cn .doc-scene { position: absolute; inset: 0; }
 
 .cn__title { background: linear-gradient(120deg, #fff6dd 12%, #ffd166 48%, #c0392b 100%); -webkit-background-clip: text; background-clip: text; }
+[data-theme='light'] .cn__title { background-image: linear-gradient(120deg, #8a5a00 12%, #b45309 48%, #c0392b 100%); }
 .cn__motto { color: var(--c-gold); }
 
 /* 地位曲线 */
@@ -248,7 +249,7 @@ function goGlobe() { void router.push('/globe') }
 .cn__ms-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .cn__ms-year { font-size: 12px; color: var(--aa); letter-spacing: 0.08em; }
 .cn__ms-head h4 { font-size: 15px; color: var(--t-hi); }
-.cn__kind { font-size: 10px; padding: 2px 8px; }
+.cn__kind { font-size: 11px; padding: 2px 8px; }
 .cn__open { font-size: 11.5px; color: var(--c-cyan); opacity: 0.85; transition: opacity var(--dur-fast); }
 .cn__open:hover { opacity: 1; text-decoration: underline; }
 .cn__ms > p { margin-top: 5px; font-size: 13px; line-height: 1.85; color: var(--t-mid); max-width: 92ch; }
@@ -260,7 +261,7 @@ function goGlobe() { void router.push('/globe') }
 .cn__tx-path { display: flex; align-items: stretch; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
 .cn__tx-stop {
   flex: 1 0 168px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-md);
-  background: linear-gradient(180deg, rgba(201, 162, 39, 0.09), rgba(5, 10, 30, 0.4));
+  background: linear-gradient(180deg, rgba(201, 162, 39, 0.09), rgba(var(--veil), 0.4));
 }
 .cn__tx-stop b { font-size: 12px; color: var(--c-amber); }
 .cn__tx-stop h5 { margin: 3px 0 5px; font-size: 13.5px; color: var(--t-hi); }
@@ -271,7 +272,7 @@ function goGlobe() { void router.push('/globe') }
 /* 硬数据 / 短板 */
 .cn__num { display: flex; flex-direction: column; gap: 6px; }
 .cn__num p { font-size: 12px; line-height: 1.7; color: var(--t-mid); }
-.cn__src { font-size: 10px; color: var(--t-faint); margin-top: auto; }
+.cn__src { font-size: 11px; color: var(--t-faint); margin-top: auto; }
 .cn__gap { display: flex; flex-direction: column; gap: 8px; }
 .cn__gap-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .cn__gap-h h4 { font-size: 15px; color: var(--t-hi); }

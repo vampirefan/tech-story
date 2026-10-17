@@ -25,3 +25,6 @@ desktop.ini
 *.suo
 *.sln
 *.sw?
+
+# 临时打包输出（绕过被锁定的 release/win-unpacked）
+release2/

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, clamp, wavePath } from './useDemo'
+import { useDemoTouch, useRaf, clamp, wavePath, useAutoDemo, seg, lerp, smooth, edgeTrigger } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -86,6 +86,27 @@ function play() {
 }
 function stop() { playing.value = false; keyDown.value = false }
 
+/* 自动演示：SOS → 越传越远 → 加中继站 → 提速 */
+const hit = edgeTrigger()
+useAutoDemo((t) => {
+  const s = seg(t, 8, 8, 8, 6)
+  if (s.i === 0) {
+    msg.value = 'SOS'; speed.value = lerp(0.6, 1.4, smooth(s.p)); distance.value = 600; relays.value = 2
+    if (hit(t, 0.4)) play()
+  } else if (s.i === 1) {
+    msg.value = '1844'; speed.value = 1.2
+    distance.value = Math.round(lerp(200, 3000, smooth(s.p)) / 50) * 50
+    if (hit(t, 8.4)) play()
+  } else if (s.i === 2) {
+    msg.value = 'TECH'; distance.value = 2400; speed.value = 1.6
+    relays.value = Math.round(lerp(0, 6, s.p))
+    if (hit(t, 16.4)) play()
+  } else {
+    msg.value = 'CQ'; relays.value = 4; speed.value = 2
+    if (hit(t, 24.4)) play()
+  }
+}, 30)
+
 /* ── 手键练习 ── */
 const manualDown = ref(false)
 const manualDur = ref(0)
@@ -134,7 +155,7 @@ const status = computed(() => {
         </linearGradient>
         <clipPath id="tgClip"><rect x="30" y="18" width="400" height="34" /></clipPath>
       </defs>
-      <rect width="460" height="224" fill="#060c1c" />
+      <rect width="460" height="224" class="stage-bg" />
 
       <!-- 纸带 -->
       <g>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, clamp } from './useDemo'
+import { useDemoTouch, useRaf, clamp, useAutoDemo, seg, lerp, smooth, edgeTrigger } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -71,6 +71,30 @@ function ignite() {
 }
 function reset() { phase.value = 'idle'; ballX.value = 0; smoke.value = []; touch('cancel') }
 
+/* 自动演示：调出最佳配比 → 密闭与开放对比 → 扫枪管长度 → 扫装药量 */
+const hit = edgeTrigger()
+useAutoDemo((t) => {
+  const s = seg(t, 8, 6, 8, 6, 4)
+  confined.value = true
+  if (s.i === 0) {
+    const g = smooth(s.p)
+    kRaw.value = Math.round(lerp(45, 75, g)); sRaw.value = Math.round(lerp(35, 10, g)); cRaw.value = Math.round(lerp(20, 15, g))
+    charge.value = 0.6; barrel.value = 0.9
+    if (hit(t, 7.4)) ignite()
+  } else if (s.i === 1) {
+    confined.value = s.p < 0.5
+    if (hit(t, 8.6) || hit(t, 11.6)) ignite()
+  } else if (s.i === 2) {
+    barrel.value = lerp(0.25, 1.7, smooth(s.p))
+    if (hit(t, 21.4)) ignite()
+  } else if (s.i === 3) {
+    barrel.value = 0.9; charge.value = lerp(0.15, 1, smooth(s.p))
+  } else {
+    charge.value = 0.85
+    if (hit(t, 28.6)) ignite()
+  }
+}, 32)
+
 const status = computed(() => {
   if (phase.value !== 'idle') {
     if (!confined.value) return { text: `开放燃烧：气体向四面八方膨胀，几乎不做功 —— 这就是"烟花"而不是"枪炮"。`, kind: 'warn' as const }
@@ -100,7 +124,7 @@ const barH = (v: number, opt: number) => ({ h: clamp(v / 90 * 96, 3, 96), optY: 
           <stop offset="0" stop-color="#7b6a4a" /><stop offset="0.4" stop-color="#4a3d28" /><stop offset="1" stop-color="#241d12" />
         </linearGradient>
       </defs>
-      <rect width="460" height="220" fill="#060c1c" />
+      <rect width="460" height="220" class="stage-bg" />
       <rect x="0" y="168" width="460" height="52" fill="#141021" />
       <line x1="0" y1="168" x2="460" y2="168" stroke="#3a2b46" stroke-width="1.4" />
 
@@ -108,7 +132,7 @@ const barH = (v: number, opt: number) => ({ h: clamp(v / 90 * 96, 3, 96), optY: 
       <g transform="translate(16,26)">
         <text class="lbl" x="0" y="-8">配比（自动归一化到 100%）</text>
         <g v-for="(b, i) in [{ v: k, n: '硝石', c: '#8fd0ff', o: 75 }, { v: s, n: '硫磺', c: '#ffd166', o: 10 }, { v: c, n: '木炭', c: '#a8946a', o: 15 }]" :key="b.n">
-          <rect :x="i * 34" y="0" width="24" height="96" rx="3" fill="rgba(120,190,255,0.07)" />
+          <rect :x="i * 34" y="0" width="24" height="96" rx="3" fill="rgba(var(--tint),0.07)" />
           <rect :x="i * 34 + 2" :y="96 - barH(b.v, b.o).h" width="20" :height="barH(b.v, b.o).h" rx="2" :fill="b.c" :opacity="0.85" />
           <line :x1="i * 34 - 2" :y1="barH(b.v, b.o).optY" :x2="i * 34 + 26" :y2="barH(b.v, b.o).optY" stroke="#fb7185" stroke-width="1.4" stroke-dasharray="3 2" />
           <text :x="i * 34 + 12" y="110" text-anchor="middle" class="lbl" font-size="9.5">{{ b.n }}</text>
@@ -163,7 +187,7 @@ const barH = (v: number, opt: number) => ({ h: clamp(v / 90 * 96, 3, 96), optY: 
         <!-- 速度标尺 -->
         <g>
           <text x="180" y="46" class="lbl">初速</text>
-          <rect x="180" y="52" width="200" height="9" rx="4" fill="rgba(120,190,255,0.1)" />
+          <rect x="180" y="52" width="200" height="9" rx="4" fill="rgba(var(--tint),0.1)" />
           <rect x="180" y="52" :width="clamp(muzzle / 900 * 200, 0, 200)" height="9" rx="4" fill="#ffb347" />
           <text x="180" y="78" class="val" font-size="13">{{ Math.round(muzzle) }} m/s</text>
           <text x="266" y="78" class="lbl">音速 340 m/s</text>

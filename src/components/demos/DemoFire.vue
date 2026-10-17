@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import DemoFrame from './DemoFrame.vue'
-import { useDemoTouch, useRaf, approach, clamp, fillStyle } from './useDemo'
+import { useDemoTouch, useRaf, approach, clamp, fillStyle, useAutoDemo, seg, lerp, smooth } from './useDemo'
 
 defineProps<{ demoId: string; title: string; hint?: string; points?: string[] }>()
 const touch = useDemoTouch()
@@ -71,6 +71,19 @@ function onMove(e: PointerEvent) {
   }
 }
 function onUp() { dragging.value = false }
+
+/* 自动演示：搓热升温 → 加压力与火候 → 鼓风 → 闷熄 → 重新点着 */
+useAutoDemo((t) => {
+  const s = seg(t, 8, 6, 5, 5, 6)
+  blowing.value = false
+  if (s.i === 0) {
+    targetRpm.value = lerp(30, 190, smooth(s.p)); pressure.value = lerp(0.3, 0.8, s.p)
+    finesse.value = 0.5; oxygen.value = 0.55
+  } else if (s.i === 1) { targetRpm.value = 210; pressure.value = 0.9; finesse.value = lerp(0.3, 1, smooth(s.p)) }
+  else if (s.i === 2) { targetRpm.value = 170; blowing.value = Math.sin(t * 2.4) > 0.2 }
+  else if (s.i === 3) { oxygen.value = lerp(0.6, 0.03, smooth(s.p)) }
+  else { oxygen.value = lerp(0.03, 0.8, smooth(s.p)); targetRpm.value = 220; pressure.value = 0.95; finesse.value = 0.95 }
+}, 30)
 
 const tempPct = computed(() => clamp((temp.value - 22) / (900 - 22), 0, 1) * 100)
 const tempColor = computed(() => {
@@ -170,7 +183,7 @@ const status = computed(() => {
       <!-- 温度计 -->
       <g>
         <text x="392" y="34" text-anchor="middle" class="lbl">温度</text>
-        <rect x="384" y="42" width="16" height="150" rx="8" fill="#060c1c" stroke="rgba(120,190,255,0.28)" />
+        <rect x="384" y="42" width="16" height="150" rx="8" fill="#060c1c" stroke="rgba(var(--tint),0.28)" />
         <rect x="387" :y="189 - tempPct * 1.44" width="10" :height="Math.max(2, tempPct * 1.44)" rx="5" :fill="tempColor" />
         <line x1="378" :y1="189 - ((IGNITE - 22) / 878) * 144" x2="406" :y2="189 - ((IGNITE - 22) / 878) * 144"
           stroke="#ff5f56" stroke-width="1.4" stroke-dasharray="3 3" />
@@ -183,12 +196,12 @@ const status = computed(() => {
         <text x="34" y="42" class="lbl">转速</text>
         <text x="34" y="58" class="val" font-size="14">{{ Math.round(rpm) }} rpm</text>
         <text x="34" y="82" class="lbl">摩擦功率</text>
-        <rect x="34" y="88" width="86" height="6" rx="3" fill="rgba(120,190,255,0.14)" />
+        <rect x="34" y="88" width="86" height="6" rx="3" fill="rgba(var(--tint),0.14)" />
         <rect x="34" y="88" :width="clamp(heat * 60, 0, 86)" height="6" rx="3" fill="#ffb347" />
         <text x="34" y="118" class="lbl">氧气供给</text>
         <g v-for="i in 5" :key="i">
           <rect :x="34 + (i - 1) * 18" y="124" width="13" height="9" rx="2"
-            :fill="oxygen * 5 >= i - 0.4 ? (blowing ? '#34d399' : '#5cc8ff') : 'rgba(120,190,255,0.12)'" />
+            :fill="oxygen * 5 >= i - 0.4 ? (blowing ? '#34d399' : '#5cc8ff') : 'rgba(var(--tint),0.12)'" />
         </g>
       </g>
     </svg>
